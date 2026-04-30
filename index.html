@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Elite | Estética Avanzada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #000; 
+            --gold: #c5a059; 
+            --white: #ffffff;
+            --gray: #f9f9f9;
+            --red: #d9534f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+        
+        body { background-color: var(--white); color: var(--primary); overflow-x: hidden; }
+
+        /* HEADER */
+        header {
+            background: var(--white);
+            padding: 10px 5%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100px;
+        }
+
+        .logo-container img { 
+            height: 140px; width: auto; display: block; margin-top: 10px;
+        }
+
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+        
+        .btn-zara-header {
+            background: var(--gold); color: #fff !important; padding: 12px 25px; border-radius: 50px; 
+            font-weight: 700; text-transform: uppercase; font-size: 0.7rem; text-decoration: none;
+            box-shadow: 0 5px 15px rgba(197, 160, 89, 0.25); transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* HERO FINAL - MEJORA DE NITIDEZ (REDUCCIÓN DE TAMAÑO) */
+        .hero {
+            height: 650px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #edeced; /* Color exacto del fondo de la imagen */
+            overflow: hidden;
+
+            background-image: 
+                /* Capa 1: Degradado ajustado para la nueva posición de la imagen */
+                linear-gradient(to right, #edeced 50%, rgba(237,236,237,0) 90%),
+                /* Capa 2: La imagen (hero-color.png) */
+                url('hero-color.png');
+
+            background-position: left center, right center;
+            
+            /* AJUSTE CLAVE PARA MÁS NITIDEZ: */
+            /* Reducimos el tamaño al 75% de la altura. Más pequeña = Más nítida. */
+            background-size: 100% 100%, auto 75%;
+            
+            background-repeat: no-repeat, no-repeat;
+            padding-left: 8%;
+        }
+
+        .hero-content { position: relative; max-width: 600px; z-index: 2; color: #000; padding-right: 20px; }
+        .hero h1 { font-size: 3.5rem; color: #000; line-height: 1.1; margin-bottom: 20px; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
+        .hero h1 span { color: var(--gold); }
+        .hero p { font-size: 1.1rem; color: #444; margin-bottom: 35px; line-height: 1.6; font-weight: 500; }
+        .btn-hero { 
+            padding: 18px 40px; background: #000; color: #fff; text-decoration: none; 
+            font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px;
+            transition: 0.3s; font-size: 0.85rem;
+            display: inline-block;
+        }
+        .btn-hero:hover { background: var(--gold); }
+
+        /* FILTROS */
+        .filters {
+            display: flex; justify-content: center; gap: 15px; padding: 50px 20px 30px;
+            background: #fff; flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 12px 30px; border: 1px solid #e0e0e0; border-radius: 50px; 
+            background: #fff; cursor: pointer; font-weight: 700; color: #888;
+            transition: 0.3s; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;
+        }
+        .filter-btn:hover, .filter-btn.active { background: #000; color: #fff; border-color: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* GRILLA */
+        .products-section { padding: 20px 5% 100px; max-width: 1400px; margin: 0 auto; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        /* TARJETA */
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            transition: 0.4s;
+            display: flex; flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: transparent; }
+
+        /* IMÁGENES TARJETAS (CONTAIN) */
+        .img-container-top {
+            width: 100%;
+            height: 220px; 
+            position: relative;
+            overflow: hidden;
+            background-color: #fff;
+            padding: 5px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .img-container-top img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            object-position: center;
+        }
+
+        .img-container-mid {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #fff;
+            padding: 10px;
+        }
+        .img-container-mid img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            object-position: center;
+        }
+
+        /* TEXTO MEDIO */
+        .card-text-area {
+            padding: 25px 20px;
+            text-align: center;
+            background: #fff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* PRECIO Y BOTÓN ABAJO */
+        .card-price-area {
+            padding: 20px;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        /* TIPOGRAFÍA */
+        .card-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; color: #000; text-transform: uppercase; letter-spacing: -0.5px; }
+        
+        .card-desc { 
+            font-size: 0.85rem; 
+            color: #555; 
+            margin-bottom: 8px; 
+            line-height: 1.5; 
+            font-weight: 500;
+        }
+        
+        .tech-detail {
+            display: block;
+            font-size: 0.7rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* PRECIOS */
+        .price-block { margin: 5px 0 15px; }
+        .price-old { text-decoration: line-through; color: #999; font-size: 0.85rem; margin-right: 8px; }
+        .price-new { font-size: 1.6rem; color: var(--gold); font-weight: 800; }
+
+        /* BOTON */
+        .btn-card {
+            display: block; width: 100%; padding: 14px; margin-top: auto;
+            border: 2px solid #000; color: #000; background: transparent;
+            text-transform: uppercase; font-weight: 800; font-size: 0.7rem; text-decoration: none;
+            transition: 0.3s; letter-spacing: 1px; 
+        }
+        .btn-card:hover { background: #000; color: #fff; }
+
+        .ai-note { font-size: 0.65rem; color: #999; margin-top: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; text-transform: uppercase;}
+
+        /* BADGES */
+        .tag {
+            position: absolute; top: 10px; left: 10px; 
+            background: #000; color: var(--gold); padding: 6px 12px; 
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            z-index: 10;
+        }
+        .discount-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: var(--red); color: #fff; padding: 8px;
+            font-weight: 700; font-size: 0.75rem; z-index: 10;
+        }
+
+        footer { background: #0a0a0a; color: #888; padding: 60px 5%; font-size: 0.85rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .footer-col h3 { color: #fff; margin-bottom: 20px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-col p { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; line-height: 1.5; }
+        .footer-col i { color: var(--gold); width: 15px; }
+        .footer-col a { color: #888; text-decoration: none; transition: 0.3s; }
+        .footer-col a:hover { color: var(--gold); }
+
+        .zara-float {
+            position: fixed; bottom: 20px; right: 20px;
+            background-color: #25D366; color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000; transition: 0.3s;
+        }
+        .hide { display: none !important; }
+
+        /* --- MEDIA QUERIES PARA MÓVIL --- */
+        @media (max-width: 768px) {
+            header { height: auto; padding: 15px; flex-direction: column; gap: 10px; }
+            .logo-container img { height: 100px; margin-top: 0; }
+            .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
+            .nav-links a { font-size: 0.75rem; }
+            
+            /* HERO MÓVIL */
+            .hero { 
+                height: auto; min-height: 600px;
+                padding: 60px 20px 350px; 
+                text-align: center; 
+                justify-content: center;
+                align-items: flex-start;
+                background-color: #edeced;
+                /* En móvil también ajustamos el tamaño para que no se pixele */
+                background-image: 
+                    linear-gradient(to bottom, rgba(237,236,237,0.9) 40%, rgba(237,236,237,0) 80%),
+                    url('hero-color.png');
+                background-position: center top, center bottom;
+                background-size: 100% 100%, auto 75%; /* 75% de altura aquí también */
+            }
+           
+            .hero h1 { font-size: 2.5rem; }
+            .hero-content { padding-right: 0; }
+            
+            .grid { grid-template-columns: 1fr; }
+            .img-container-top { height: 250px; } 
+            .img-container-mid { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo5.png" alt="Body Elite Logo">
+        </div>
+        <nav class="nav-links">
+            <a href="#" onclick="filterSelection('all')" class="active">Todos</a>
+            <a href="#" onclick="filterSelection('corporal')" class="filter-btn-nav">Corporal</a>
+            <a href="#" onclick="filterSelection('facial')" class="filter-btn-nav">Facial</a>
+            <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="btn-zara-header">
+                <i class="fas fa-robot"></i> Agenda tu evaluación sin costo
+            </a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>INNOVACIÓN ESTÉTICA,<br><span>RESULTADOS REALES</span></h1>
+            <p>Especialistas en <strong>remodelación corporal y rejuvenecimiento facial</strong>. Utilizamos tecnología clínica de avanzada para <strong>esculpir tu figura y revitalizar tu piel</strong> de forma segura, logrando la <strong>armonía y definición</strong> que buscas sin recurrir a la cirugía.</p>
+            <a href="#planes" class="btn-hero">VER TRATAMIENTOS</a>
+        </div>
+    </section>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterSelection('all')">Ver Todos</button>
+        <button class="filter-btn" onclick="filterSelection('corporal')">Corporal & Reductivos</button>
+        <button class="filter-btn" onclick="filterSelection('facial')">Facial & Antiage</button>
+    </div>
+
+    <section class="products-section" id="planes">
+        <div class="grid">
+            
+            <div class="card filterDiv corporal">
+                <div class="img-container-top">
+                    <img src="lipsuction-2.jpg" alt="Lipo Body Elite Resultado">
+                    <span class="tag">Plan Premium</span>
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+                <div class="card-text-area">
+                    <div class="card-title">Lipo Body Elite</div>
+                    <p class="card-desc">Reducción de grasa profunda y remodelación integral para pacientes con mayor porcentaje de grasa y flacidez. Resultados visibles en 8-12 semanas.</p>
+                    <span class="tech-detail">Tecnología: HIFU 12D + Lipoláser + 12 sesiones Prosculpt</span>
+                </div>
+                <div class="img-container-mid">
+                    <img src="hifu12 lipo body elite.jpeg" alt="Tecnología HIFU">
+                </div>
+                <div class="card-price-area">
+                    <div class="price-block">
+                        <span class="price-old">$830.000</span>
+                        <span class="price-new">$664.000</span>
+                    </div>
+                    <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="btn-card">
+                        AGENDA TU EVALUACIÓN SIN COSTO
+                    </a>
+                    <div class="ai-note"><i class="fas fa-sparkles"></i> Asistencia Inteligencia Artificial</div>
+                </div>
+            </div>
+
+            <div class="card filterDiv corporal">
+                <div class="img-container-top">
+                    <img src="antesydespues.png" alt="Antes y Después">
+                    <span class="tag">Resultados Rápidos</span>
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+                <div class="card-text-area">
+                    <div class="card-title">Lipo Express</div>
+                    <p class="card-desc">Ideal para flacidez leve y grasa localizada. Logra reafirmación y una mejora sustancial del contorno corporal en solo 6-8 semanas.</p>
+                    <span class="tech-detail">Tecnología: HIFU 12D + Radiofrecuencia + Prosculpt</span>
+                </div>
+                <div class="img-container-mid">
+                    <img src="lipo express 2.jpeg" alt="Tecnología Reductiva">
+                </div>
+                <div class="card-price-area">
+                    <div class="price-block">
+                        <span class="price-old">$540.000</span>
+                        <span class="price-new">$432.000</span>
+                    </div>
+                    <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="btn-card">
+                        AGENDA TU EVALUACIÓN SIN COSTO
+                    </a>
+                    <div class="ai-note"><i class="fas fa-sparkles"></i> Asistencia Inteligencia Artificial</div>
+                </div>
+            </div>
+
+            <div class="card filterDiv corporal">
+                <div class="img-container-top">
+                    <img src="pushup.jpeg" alt="Levantamiento Glúteos">
+                    <span class="tag">Levantamiento</span>
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+                <div class="card-text-area">
+                    <div class="card-title">Push Up Glúteos</div>
+                    <p class="card-desc">Olvídate de las sentadillas infinitas. Logra unos glúteos firmes, levantados y con volumen armónico mediante estimulación muscular.</p>
+                    <span class="tech-detail">Tecnología: HIFU 12D + 12 sesiones Prosculpt (Efecto Gym)</span>
+                </div>
+                <div class="img-container-mid">
+                    <img src="push up 2.jpeg" alt="Tecnología Prosculpt">
+                </div>
+                <div class="card-price-area">
+                    <div class="price-block">
+                        <span class="price-old">$470.000</span>
+                        <span class="price-new">$376.000</span>
+                    </div>
+                    <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="btn-card">
+                        AGENDA TU EVALUACIÓN SIN COSTO
+                    </a>
+                    <div class="ai-note"><i class="fas fa-sparkles"></i> Asistencia Inteligencia Artificial</div>
+                </div>
+            </div>
+
+            <div class="card filterDiv facial">
+                <div class="img-container-top">
+                    <img src="full face1.jpeg" alt="Rejuvenecimiento Facial">
+                    <span class="tag">Rejuvenecimiento</span>
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+                <div class="card-text-area">
+                    <div class="card-title">Full Face</div>
+                    <p class="card-desc">La experiencia facial definitiva. Recupera la luminosidad, tensa la piel y suaviza líneas de expresión con nuestro cocktail de tecnologías.</p>
+                    <span class="tech-detail">Incluye: HIFU Facial + Limpiezas + Pink Glow + Toxina</span>
+                </div>
+                <div class="img-container-mid">
+                    <img src="hifu12 lifting.jpeg" alt="HIFU Facial">
+                </div>
+                <div class="card-price-area">
+                    <div class="price-block">
+                        <span class="price-old">$730.000</span>
+                        <span class="price-new">$584.000</span>
+                    </div>
+                    <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="btn-card">
+                        AGENDA TU EVALUACIÓN SIN COSTO
+                    </a>
+                    <div class="ai-note"><i class="fas fa-sparkles"></i> Asistencia Inteligencia Artificial</div>
+                </div>
+            </div>
+
+            <div class="card filterDiv facial">
+                <div class="img-container-top">
+                    <img src="botox.jpeg" alt="Toxina Botulínica">
+                    <span class="tag">Anti-Edad</span>
+                    <span class="discount-badge">20% OFF</span>
+                </div>
+                <div class="card-text-area">
+                    <div class="card-title">Face Antiage</div>
+                    <p class="card-desc">Detén el paso del tiempo. Combinamos la potencia del HIFU con la precisión de la toxina botulínica para un rostro visiblemente más joven.</p>
+                    <span class="tech-detail">Tecnología: HIFU Facial + Toxina Botulínica (Botox)</span>
+                </div>
+                <div class="img-container-mid">
+                    <img src="radiofrecuencia facial.jpeg" alt="Radiofrecuencia">
+                </div>
+                <div class="card-price-area">
+                    <div class="price-block">
+                        <span class="price-old">$352.000</span>
+                        <span class="price-new">$281.600</span>
+                    </div>
+                    <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="btn-card">
+                        AGENDA TU EVALUACIÓN SIN COSTO
+                    </a>
+                    <div class="ai-note"><i class="fas fa-sparkles"></i> Asistencia Inteligencia Artificial</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-phone"></i> Recepción: +56 9 8330 4436</p>
+                <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/body.elitelp/" target="_blank">@body.elitelp</a></p>
+            </div>
+            <div class="footer-col">
+                <h3>Ubicación</h3>
+                <p>Av. Las Perdices 2990, Local 23</p>
+                <p>2° Piso, Strip Center Las Pircas</p>
+                <p>Peñalolén, Santiago</p>
+            </div>
+            <div class="footer-col">
+                <h3>Horarios</h3>
+                <p>Lunes a Viernes: 10:00 - 19:00</p>
+                <p>Sábados: 10:00 - 13:00</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px solid #222;">
+            &copy; 2026 Body Elite. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <a href="https://wa.me/56983304436?text=Vi%20su%20web%20y%20me%20gustaría%20agendar" class="zara-float">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        filterSelection("all")
+        function filterSelection(c) {
+          var x, i;
+          x = document.getElementsByClassName("filterDiv");
+          if (c == "all") c = "";
+          for (i = 0; i < x.length; i++) {
+            x[i].classList.remove("hide");
+            if (x[i].className.indexOf(c) == -1) x[i].classList.add("hide");
+          }
+          var btns = document.getElementsByClassName("filter-btn");
+          for (i = 0; i < btns.length; i++) {
+              btns[i].classList.remove("active");
+              if(btns[i].getAttribute('onclick').includes("'"+ (c || 'all') + "'")) {
+                  btns[i].classList.add("active");
+              }
+          }
+        }
+    </script>
+</body>
+</html>

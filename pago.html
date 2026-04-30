@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Elite | Comprar Gift Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #3a2520;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(245, 220, 210, 0.85) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 25%, rgba(232, 195, 188, 0.7) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 90%, rgba(199, 139, 139, 0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(250, 235, 225, 0.9) 0%, transparent 50%),
+      linear-gradient(135deg, #fdf6f1 0%, #f7e8df 45%, #f0d6c8 100%);
+    background-attachment: fixed;
+  }
+  .container {
+    background: rgba(255, 252, 250, 0.85);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    max-width: 580px;
+    width: 100%;
+    padding: 44px 40px 40px;
+    border-radius: 24px;
+    box-shadow:
+      0 40px 100px rgba(120, 60, 50, 0.18),
+      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    border: 1px solid rgba(199, 139, 139, 0.25);
+  }
+  .logo-wrap { text-align: center; margin-bottom: 16px; }
+  .logo-wrap img { max-width: 110px; height: auto; }
+  .campaign {
+    text-align: center;
+    font-family: 'Great Vibes', cursive;
+    font-size: 42px;
+    color: #c78b8b;
+    line-height: 1;
+  }
+  .subtitle {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #8a5f55;
+    font-size: 13px;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .servicio-card {
+    background: linear-gradient(135deg, #2a1810 0%, #4a2820 100%);
+    color: #e8c8a8;
+    padding: 18px 22px;
+    border-radius: 14px;
+    margin-bottom: 26px;
+    text-align: center;
+    border: 1px solid #c78b8b;
+  }
+  .servicio-card .label {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 4px;
+  }
+  .servicio-card .nombre {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .servicio-card .precio {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #f5d4b8;
+  }
+  .form-group { margin-bottom: 16px; }
+  label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #8a5f55;
+    margin-bottom: 7px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="tel"], textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid rgba(199, 139, 139, 0.35);
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    background: rgba(255, 251, 248, 0.85);
+    color: #3a2520;
+    transition: all .25s ease;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #c78b8b;
+    background: #fffbf8;
+    box-shadow: 0 0 0 3px rgba(199, 139, 139, 0.12);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .radio-group { display: flex; gap: 10px; }
+  .radio-option { flex: 1; position: relative; }
+  .radio-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+  .radio-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    border: 1px solid rgba(199, 139, 139, 0.35);
+    border-radius: 10px;
+    background: rgba(255, 251, 248, 0.85);
+    color: #5a3a30;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: 0;
+  }
+  .radio-option input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, #2a1810 0%, #4a2820 100%);
+    color: #e8c8a8;
+    border-color: #c78b8b;
+  }
+  button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #2a1810 0%, #4a2820 100%);
+    color: #e8c8a8;
+    border: 1px solid #c78b8b;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 8px;
+    font-weight: 600;
+    transition: all .3s;
+  }
+  button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(42, 24, 16, 0.3);
+  }
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #6a5550;
+    border-color: rgba(199, 139, 139, 0.3);
+  }
+  .status {
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    display: none;
+  }
+  .status.show { display: block; }
+  .status.error {
+    background: rgba(253, 232, 232, 0.95);
+    color: #a02020;
+    border: 1px solid rgba(180, 50, 50, 0.25);
+  }
+  .status.info {
+    background: rgba(245, 225, 215, 0.7);
+    color: #6a4030;
+    border: 1px solid rgba(199, 139, 139, 0.2);
+  }
+  .status.success {
+    background: rgba(232, 245, 233, 0.85);
+    color: #2a6f2e;
+    border: 1px solid rgba(80, 140, 90, 0.25);
+  }
+  .footer-note {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: #8a6055;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 10, 8, 0.65);
+    backdrop-filter: blur(6px);
+    z-index: 9998;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal-pago {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow: auto;
+    padding: 24px;
+    position: relative;
+  }
+  .modal-pago h3 {
+    font-family: 'Playfair Display', serif;
+    color: #3a2520;
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 20px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #8a5f55;
+    cursor: pointer;
+    padding: 4px 10px;
+    width: auto;
+    margin: 0;
+    letter-spacing: 0;
+  }
+  #wallet_container { min-height: 60px; }
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(199, 139, 139, 0.3);
+    border-top-color: #c78b8b;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Body Elite" onerror="this.style.display='none'">
+  </div>
+  <div class="campaign">Día de la Madre</div>
+  <div class="subtitle">Comprar Gift Card</div>
+
+  <div id="status" class="status"></div>
+
+  <div id="servicio-card" class="servicio-card">
+    <div class="label">Tratamiento</div>
+    <div class="nombre" id="servicio-nombre">—</div>
+    <div class="precio" id="servicio-precio">—</div>
+  </div>
+
+  <div class="form-group">
+    <label for="para">Para mamá</label>
+    <input type="text" id="para" maxlength="60" placeholder="Nombre completo de tu mamá" required>
+  </div>
+  <div class="form-group">
+    <label for="de">De parte de</label>
+    <input type="text" id="de" maxlength="60" placeholder="Tu nombre" required>
+  </div>
+  <div class="form-group">
+    <label for="telefono">Tu teléfono de contacto</label>
+    <input type="tel" id="telefono" maxlength="20" placeholder="+56 9 1234 5678" required>
+  </div>
+  <div class="form-group">
+    <label>¿Quién regala?</label>
+    <div class="radio-group">
+      <div class="radio-option">
+        <input type="radio" id="rol-hijo" name="rol" value="hijo">
+        <label for="rol-hijo">Hijo</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" id="rol-hija" name="rol" value="hija" checked>
+        <label for="rol-hija">Hija</label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="mensaje">Dedicatoria especial</label>
+    <textarea id="mensaje" maxlength="320" required>Mamá, sacar belleza de este caos es virtud, pero tú lo haces ver fácil. Gracias por darme tanto y pedir tan poco. Hoy te toca a ti desconectar y dejarte regalonear como mereces. ¡Feliz día, te amo infinito!</textarea>
+  </div>
+
+  <button id="btn-pagar" disabled>Pagar y generar Gift Card</button>
+  <div class="footer-note">Pago seguro con MercadoPago · Tarjetas, débito y Webpay</div>
+</div>
+
+<div id="modal" class="modal-backdrop">
+  <div class="modal-pago">
+    <button class="modal-close" id="modal-close">×</button>
+    <h3>Completar pago</h3>
+    <div id="wallet_container"></div>
+  </div>
+</div>
+
+<script>
+// --- AJUSTES DE ARQUITECTURA ---
+const API_BASE = 'TU_URL_DE_RENDER_AQUI'; 
+const MP_PUBLIC_KEY = 'TU_PUBLIC_KEY_AQUI';
+// -------------------------------
+
+const params = new URLSearchParams(window.location.search);
+const servicio = (params.get('servicio') || '').toLowerCase();
+
+const statusEl = document.getElementById('status');
+const btn = document.getElementById('btn-pagar');
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const walletContainer = document.getElementById('wallet_container');
+
+const inputs = {
+  para: document.getElementById('para'),
+  de: document.getElementById('de'),
+  telefono: document.getElementById('telefono'),
+  mensaje: document.getElementById('mensaje')
+};
+
+let preferenceId = null;
+let pollIntervalId = null;
+let mpInstance = null;
+
+function showStatus(msg, type) {
+  statusEl.className = 'status show ' + (type || 'info');
+  statusEl.innerHTML = (type === 'info' ? '<span class="spinner"></span>' : '') + msg;
+}
+function hideStatus() {
+  statusEl.className = 'status';
+  statusEl.textContent = '';
+}
+
+function validForm() {
+  return inputs.para.value.trim().length > 0
+      && inputs.de.value.trim().length > 0
+      && inputs.telefono.value.trim().length >= 8
+      && inputs.mensaje.value.trim().length > 0;
+}
+
+function updateButton() {
+  btn.disabled = !validForm();
+}
+
+Object.values(inputs).forEach(el => el.addEventListener('input', updateButton));
+
+async function loadPrecio() {
+  if (!servicio) {
+    showStatus('Falta el parámetro <b>?servicio=</b> en la URL.', 'error');
+    btn.disabled = true;
+    return;
+  }
+  try {
+    const res = await fetch(API_BASE + '/api/precios');
+    const precios = await res.json();
+    if (!precios[servicio]) {
+      showStatus('Servicio no reconocido: <b>' + servicio + '</b>', 'error');
+      btn.disabled = true;
+      return;
+    }
+    document.getElementById('servicio-nombre').textContent = precios[servicio].label;
+    document.getElementById('servicio-precio').textContent = '$' + precios[servicio].amount.toLocaleString('es-CL');
+  } catch (e) {
+    showStatus('No se pudo cargar el precio: ' + e.message, 'error');
+    btn.disabled = true;
+  }
+}
+
+async function iniciarPago() {
+  if (!validForm()) return;
+  btn.disabled = true;
+  btn.textContent = 'Preparando pago...';
+  showStatus('Conectando con MercadoPago...', 'info');
+
+  const rolEl = document.querySelector('input[name="rol"]:checked');
+  const payload = {
+    servicio,
+    para: inputs.para.value.trim(),
+    de: inputs.de.value.trim(),
+    telefono: inputs.telefono.value.trim(),
+    mensaje: inputs.mensaje.value.trim(),
+    rol: rolEl ? rolEl.value : 'hija'
+  };
+
+  try {
+    const res = await fetch(API_BASE + '/api/create-preference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || 'No se pudo crear la preferencia');
+    }
+    preferenceId = data.preference_id;
+    hideStatus();
+    abrirModalPago();
+  } catch (e) {
+    showStatus('Error: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Pagar y generar Gift Card';
+  }
+}
+
+function abrirModalPago() {
+  modal.classList.add('show');
+  walletContainer.innerHTML = '';
+
+  if (!mpInstance) {
+    mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
+  }
+  const bricksBuilder = mpInstance.bricks();
+  bricksBuilder.create('wallet', 'wallet_container', {
+    initialization: { preferenceId: preferenceId },
+    customization: { texts: { valueProp: 'smart_option' } },
+    callbacks: {
+      onReady: () => { iniciarPolling(); },
+      onError: (err) => { showStatus('Error de pago: ' + (err.message || 'desconocido'), 'error'); },
+      onSubmit: () => {}
+    }
+  });
+}
+
+function iniciarPolling() {
+  if (pollIntervalId) clearInterval(pollIntervalId);
+  pollIntervalId = setInterval(consultarStatus, 3000);
+}
+
+async function consultarStatus() {
+  if (!preferenceId) return;
+  try {
+    const res = await fetch(API_BASE + '/api/payment-status?preference_id=' + encodeURIComponent(preferenceId));
+    const data = await res.json();
+    if (!data.success) return;
+
+    if (data.status === 'approved' && data.payment_id) {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
+      modal.classList.remove('show');
+      showStatus('¡Pago aprobado! Generando tu Gift Card...', 'success');
+      setTimeout(() => {
+        window.location.href = '/regalo.html?payment_id=' + encodeURIComponent(data.payment_id) + '&servicio=' + encodeURIComponent(servicio);
+      }, 1200);
+    } else if (data.status === 'rejected') {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
+      showStatus('Pago rechazado. Por favor intenta de nuevo o usa otra tarjeta.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Pagar y generar Gift Card';
+    }
+  } catch (e) {}
+}
+
+modalClose.addEventListener('click', () => {
+  modal.classList.remove('show');
+  if (pollIntervalId) {
+    clearInterval(pollIntervalId);
+    pollIntervalId = null;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Pagar y generar Gift Card';
+  hideStatus();
+});
+
+btn.addEventListener('click', iniciarPago);
+
+loadPrecio();
+updateButton();
+</script>
+</body>
+</html>
