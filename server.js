@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = process.env.DATA_DIR || (process.env.RENDER ? '/var/data' : __dirname);
+const DATA_DIR = process.env.DATA_DIR || (process.env.RENDER ? '.' : __dirname);
 const DB_FILE = path.join(DATA_DIR, 'used_payments.json');
 
 app.use(cors());
