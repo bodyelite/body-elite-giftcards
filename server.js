@@ -74,5 +74,58 @@ app.get('/api/precios', (req, res) => {
   });
 });
 
+
+app.post('/api/create-preference', async (req, res) => {
+  try {
+    const { servicio, para, de, telefono, mensaje, rol } = req.body || {};
+    if (!servicio) throw new Error("Faltan datos del formulario. Falta el lector JSON.");
+    
+    const token = process.env.MP_ACCESS_TOKEN;
+    if (!token) throw new Error("Falta el MP_ACCESS_TOKEN en el panel de Render.");
+
+    const { MercadoPagoConfig, Preference } = require('mercadopago');
+    const client = new MercadoPagoConfig({ accessToken: token });
+    const preference = new Preference(client);
+
+    const PRECIOS = {
+      "hifu": { label: "HIFU 12D (Día de la Madre)", amount: 99450 },
+      "toxina": { label: "Toxina Botulínica (Día de la Madre)", amount: 162500 },
+      "pinkglow": { label: "Pink Glow (Día de la Madre)", amount: 59800 },
+      "adn": { label: "ADN de Salmón (Día de la Madre)", amount: 69550 },
+      "limpieza": { label: "Limpieza Profunda (Día de la Madre)", amount: 39000 }
+    };
+
+    const item = PRECIOS[servicio.toLowerCase()];
+    if (!item) throw new Error("Servicio desconocido: " + servicio);
+
+    const result = await preference.create({
+      body: {
+        items: [{ id: servicio, title: item.label, quantity: 1, unit_price: item.amount }],
+        back_urls: {
+          success: "https://www.bodyelite.cl/regalo.html",
+          failure: "https://www.bodyelite.cl/pago.html",
+          pending: "https://www.bodyelite.cl/pago.html"
+        },
+        auto_return: "approved",
+        metadata: { para, de, telefono, mensaje, rol, servicio }
+      }
+    });
+
+    try {
+      let db = {};
+      if (fs.existsSync('./used_payments.json')) {
+        db = JSON.parse(fs.readFileSync('./used_payments.json', 'utf8'));
+      }
+      db[result.id] = { servicio, para, de, telefono, mensaje, rol, label: item.label };
+      fs.writeFileSync('./used_payments.json', JSON.stringify(db));
+    } catch(e) {}
+
+    res.json({ success: true, preference_id: result.id });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.use((err, req, res, next) => { res.status(500).json({ success: false, error: 'Falla interna: ' + err.message }); });
 app.listen(PORT, () => console.log('Server on ' + PORT + ' | DB: ' + DB_FILE));
 });
