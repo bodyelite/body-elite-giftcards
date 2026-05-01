@@ -1,98 +1,632 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Especial Día de la Madre - Body Elite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --oro: #c5a059; --fondo: #fcf8f5; --texto: #4a4a4a; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--fondo); color: var(--texto); margin: 0; padding: 40px 20px; text-align: center; }
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--oro); margin-bottom: 10px; }
-        p.sub { font-style: italic; margin-bottom: 40px; color: #888; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { transform: translateY(-5px); }
-        .card h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0 0 15px 0; }
-        .price { font-size: 1.8rem; font-weight: 600; color: var(--oro); margin-bottom: 20px; }
-        .btn { background-color: #2c2c2c; color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; transition: background 0.3s; }
-        .btn:hover { background-color: var(--oro); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Elite | Especial Día de la Madre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<style>
+  :root {
+    --cream: #fcf8f5;
+    --cream-deep: #f3e9df;
+    --gold: #c5a059;
+    --gold-light: #d9b97a;
+    --gold-deep: #9c7a3e;
+    --rose: #c78b8b;
+    --rose-soft: #e0b5b5;
+    --dark: #1a1a1a;
+    --dark-soft: #3a2520;
+    --muted: #8a6055;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--dark);
+    background: var(--cream);
+    background-image:
+      radial-gradient(ellipse at 12% 8%, rgba(199, 139, 139, 0.10) 0%, transparent 45%),
+      radial-gradient(ellipse at 88% 18%, rgba(197, 160, 89, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(224, 181, 181, 0.10) 0%, transparent 60%);
+    line-height: 1.6;
+  }
+
+  .header {
+    text-align: center;
+    padding: 64px 20px 48px;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 32px auto 0;
+  }
+  .logo-wrap { margin-bottom: 18px; }
+  .logo-wrap img { max-width: 130px; height: auto; }
+  .brand-tag {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .campaign-script {
+    font-family: 'Great Vibes', cursive;
+    color: var(--rose);
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .campaign-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 42px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .campaign-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin-top: 18px;
+  }
+  .location-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 8px 18px;
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    border-radius: 30px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .location-tag::before {
+    content: '◆';
+    color: var(--gold);
+    font-size: 8px;
+  }
+
+  .grid {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 16px 24px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 32px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid rgba(197, 160, 89, 0.18);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+      0 4px 24px rgba(60, 30, 20, 0.06),
+      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    display: flex;
+    flex-direction: column;
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 22px 50px rgba(60, 30, 20, 0.14),
+      0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+    border-color: rgba(197, 160, 89, 0.4);
+  }
+  .card.test-card {
+    border: 1px dashed rgba(197, 160, 89, 0.5);
+    opacity: 0.92;
+  }
+  .card.test-card .card-header {
+    background: linear-gradient(135deg, #f5f0eb, #ebe0d3);
+  }
+  .card-header {
+    background: linear-gradient(135deg, #fdf6ee 0%, #f3e2cf 100%);
+    padding: 28px 28px 22px;
+    border-bottom: 1px solid rgba(197, 160, 89, 0.18);
+    position: relative;
+  }
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .card-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--gold-deep);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .card-price {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 32px;
+  }
+  .card-price .currency {
+    font-size: 18px;
+    color: var(--gold-deep);
+    font-weight: 500;
+    margin-right: 4px;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .card-body { padding: 24px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+
+  .form-group { margin-bottom: 14px; }
+  label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input[type="text"], input[type="tel"], textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid rgba(60, 30, 20, 0.12);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    transition: border-color .2s, background .2s, box-shadow .2s;
+  }
+  input::placeholder, textarea::placeholder {
+    color: rgba(60, 30, 20, 0.35);
+    font-weight: 300;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.12);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .radio-group { display: flex; gap: 8px; }
+  .radio-option { flex: 1; position: relative; }
+  .radio-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+  .radio-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px;
+    border: 1px solid rgba(60, 30, 20, 0.12);
+    border-radius: 8px;
+    background: var(--cream);
+    color: var(--dark-soft);
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s;
+    margin: 0;
+  }
+  .radio-option input[type="radio"]:checked + label {
+    background: var(--dark);
+    color: var(--gold-light);
+    border-color: var(--gold);
+  }
+
+  button.buy-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--dark) 0%, #2c1f1a 100%);
+    color: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform .25s, box-shadow .25s, background .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  button.buy-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(26, 26, 26, 0.25);
+    background: linear-gradient(135deg, #2c1f1a 0%, #3a2520 100%);
+  }
+  button.buy-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .card-status {
+    display: none;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .card-status.show { display: block; }
+  .card-status.error { background: #fde8e8; color: #a02020; }
+  .card-status.info { background: #f3e9df; color: var(--gold-deep); }
+  .card-status.success { background: #e8f5e9; color: #2a6f2e; }
+
+  .footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    border-top: 1px solid rgba(197, 160, 89, 0.15);
+    margin-top: 32px;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+  .footer strong {
+    font-family: 'Playfair Display', serif;
+    font-style: normal;
+    color: var(--dark);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .footer .addr { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.5px; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 10, 8, 0.65);
+    backdrop-filter: blur(6px);
+    z-index: 9998;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal-pago {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow: auto;
+    padding: 28px;
+    position: relative;
+  }
+  .modal-pago h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--dark);
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 20px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 10px;
+  }
+  #wallet_container { min-height: 60px; }
+
+  .spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(197, 160, 89, 0.3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 600px) {
+    .campaign-title { font-size: 30px; letter-spacing: 2px; }
+    .campaign-script { font-size: 44px; }
+    .grid { padding: 16px 16px 48px; gap: 22px; }
+    .header { padding: 48px 20px 32px; }
+  }
+</style>
 </head>
 <body>
-    <h1>Especial Día de la Madre</h1>
-    <p class="sub">Regala una experiencia de lujo y bienestar</p>
-    
-    <div class="grid">
-        <div class="card">
-            <h3>HIFU 12D</h3>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>            <div class="price">$99.450</div>
-            <a href="pago.html?servicio=hifu" class="btn">ELEGIR ESTE REGALO</a>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>        </div>
-        <div class="card">
-            <h3>Toxina Botulínica</h3>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>            <div class="price">$162.500</div>
-            <a href="pago.html?servicio=toxina" class="btn">ELEGIR ESTE REGALO</a>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>        </div>
-        <div class="card">
-            <h3>Pink Glow</h3>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>            <div class="price">$59.800</div>
-            <a href="pago.html?servicio=pinkglow" class="btn">ELEGIR ESTE REGALO</a>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>        </div>
-        <div class="card">
-            <h3>ADN de Salmón</h3>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>            <div class="price">$69.550</div>
-            <a href="pago.html?servicio=adn" class="btn">ELEGIR ESTE REGALO</a>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>        </div>
-        <div class="card">
-            <h3>Limpieza Profunda</h3>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>            <div class="price">$39.000</div>
-            <a href="pago.html?servicio=limpieza" class="btn">ELEGIR ESTE REGALO</a>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>        </div>
-        <div class="card" style="border: 1px dashed #ccc; opacity: 0.7;">
-            <h3>Test de Sistema</h3>
-            <div class="price">$100</div>
-            <a href="pago.html?servicio=test" class="btn">PROBAR PAGO</a>
-        </div>    </div>
+
+<header class="header">
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Body Elite" onerror="this.style.display='none'">
+  </div>
+  <div class="brand-tag">Estética Avanzada</div>
+  <div class="campaign-script">Especial</div>
+  <div class="campaign-title">Día de la Madre</div>
+  <div class="campaign-subtitle">Regálale lo que ella realmente merece</div>
+  <div class="location-tag">Las Pircas · Peñalolén</div>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<footer class="footer">
+  <strong>Body Elite</strong>
+  Estética Avanzada · Tecnología de vanguardia
+  <div class="addr">Las Pircas, Peñalolén · Santiago de Chile</div>
+</footer>
+
+<div id="modal" class="modal-backdrop">
+  <div class="modal-pago">
+    <button class="modal-close" id="modal-close">×</button>
+    <h3>Completar pago</h3>
+    <div id="wallet_container"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'https://body-elite-giftcards.onrender.com';
+const MP_PUBLIC_KEY = 'APP_USR-2929443570544346-043019-8759fbf6f737bb580a469f27b90bd0c5-2665758946';
+
+const SERVICIOS = [
+  { key: 'hifu',     title: 'HIFU 12D',                eyebrow: 'Lifting sin cirugía',     price: 99450 },
+  { key: 'toxina',   title: 'Toxina Botulínica',       eyebrow: 'Expresión natural',       price: 162500 },
+  { key: 'pinkglow', title: 'Pink Glow',               eyebrow: 'Glow coreano',            price: 59800 },
+  { key: 'adn',      title: 'ADN de Salmón',           eyebrow: 'Regeneración celular',    price: 69550 },
+  { key: 'limpieza', title: 'Limpieza Facial Profunda',eyebrow: 'Piel renovada',           price: 39000 },
+  { key: 'prueba',   title: 'Servicio de Prueba',      eyebrow: 'Testeo interno',          price: 100, isTest: true }
+];
+
+const grid = document.getElementById('grid');
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const walletContainer = document.getElementById('wallet_container');
+
+let preferenceId = null;
+let pollIntervalId = null;
+let currentServicio = null;
+let mpInstance = null;
+
+function fmtCLP(n) {
+  return n.toLocaleString('es-CL');
+}
+
+function buildCard(s) {
+  return `
+  <article class="card${s.isTest ? ' test-card' : ''}" data-key="${s.key}">
+    <div class="card-header">
+      <div class="card-eyebrow">${s.eyebrow}</div>
+      <div class="card-title">${s.title}</div>
+      <div class="card-price"><span class="currency">$</span>${fmtCLP(s.price)}</div>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label>Para mamá</label>
+        <input type="text" class="i-para" maxlength="60" placeholder="Nombre de tu mamá">
+      </div>
+      <d];
+
+const grid = document.getElementById('grid');
+const modal = document.getElement" class="i-de" maxlength="60" placeholder="Tu nombre">
+      </div>
+      <div class="form-group">
+        <label>Tu teléfono</label>
+        <input type="tel" class="i-telefono" maxlength="20" placeholder="+56 9 1234 5678">
+      </div>
+      <div class="form-group">
+        <label>Diseño de la Gift Card</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="rol-hijo-${s.key}" name="rol-${s.key}" value="hijo">
+            <label for="rol-hijo-${s.key}">Hijo</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="rol-hija-${s.key}" name="rol-${s.key}" value="hija" checked>
+            <label for="rol-hija-${s.key}">Hija</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <labe      </div>
+      <d];
+
+const grid = document.getElementById('grid');
+conplaceholder="Escribe unas palabras desde el corazón...">Mamá, sacar belleza de este caos es virtud, pero tú lo haces ver fácil. Gracias por darme tanto y pedir tan poco. Hoy te toca a ti desconectar y dejarte regalonear como mereces. ¡Feliz día, te amo infinito!</textarea>
+      </div>
+      <button class="buy-btn" disabled>${s.isTest ? 'Comprar (Test)' : 'Comprar Gift Card'}</button>
+      <div class="card-status"></div>
+    </div>
+  </article>`;
+}
+
+grid.innerHTML = SERVICIOS.map(buildCard).join('');
+
+function setupCard(card) {
+  const key = card.dataset.key;
+  const para = card.querySelector('.i-para');
+  const de = card.querySelector('.i-de');
+  const telefono = card.querySelector('.i-telefono');
+  const mensaje = card.querySelector('.i-mensaje');
+  const btn = card.querySelector('.buy-btn');
+  const statusEl = card.querySelector('.card-status');
+
+  function showStatus(msg, type) {
+    statusEl.className = 'card-status show ' + (type || 'info');
+    statusEl.innerHTML = (type === 'info' ? '<span class="spinner"></span>' : '') + msg;
+  }
+  function hideStatus() { statusEl.className = 'card-status'; statusEl.textContent = ''; }
+
+  function valid() {
+    return para.value.trim().length > 0
+      && de.value.trim().length > 0
+      && telefono.value.trim().length >= 8
+      && mensaje.value.trim().length > 0;
+  }
+  function refresh() { btn.disabled = !valid(); }
+
+  [para, de, telefono, mensaje].forEach(el => el.addEventListener('input', refresh));
+  refresh();
+
+  btn.addEventListener('click', async () => {
+    if (!valid()) return;
+    btn.disabled = true;
+    const origText = btn.textContent;
+    btn.textContent = 'Preparando pago...';
+    showStatus('Conectando con MercadoPago...', 'info');
+
+    const rolEl = card.querySelector('input[name="rol-' + key + '"]:checked');
+    const payload = {
+      servicio: key,
+      para: para.value.trim(),
+      de: de.value.trim(),
+      telefono: telefono.value.trim(),
+      mensaje: mensaje.value.trim(),
+      rol: rolEl ? rolEl.value : 'hija'
+    };
+
+    try {
+      const res = await fetch(API_BASE + '/api/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'No se pudo crear la preferencia');
+      }
+      preferenceId = data.preference_id;
+      currentServicio = key;
+      hideStatus();
+      abrirModalPago(card);
+    } catch (e) {
+      showStatus('Error: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.textContent = origText;
+    }
+  });
+}
+
+document.querySelectorAll('.card').forEach(setupCard);
+
+function abrirModalPago(card) {
+  modal.classList.add('show');
+  walletContainer.innerHTML = '';
+
+  if (!mpInstance) {
+    if (!MP_PUBLIC_KEY || MP_PUBLIC_KEY === 'TU_PUBLIC_KEY_AQUI') {
+      const s = card.querySelector('.card-status');
+      s.className = 'card-status show error';
+      s.textContent = 'Falta configurar MP_PUBLIC_KEY en promos.html';
+      modal.classList.remove('show');
+      return;
+    }
+    mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
+  }
+  const bricksBuilder = mpInstance.bricks();
+  bricksBuilder.create('wallet', 'wallet_container', {
+    initialization: { preferenceId: preferenceId },
+    customization: { texts: { valueProp: 'smart_option' } },
+    callbacks: {
+      onReady: () => { iniciarPolling(card); },
+      onError: () => {},
+      onSubmit: () => {}
+    }
+  });
+}
+
+function iniciarPolling(card) {
+  if (pollIntervalId) clearInterval(pollIntervalId);
+  pollIntervalId = setInterval(() => consultarStatus(card), 3000);
+}
+
+async function consultarStatus(card) {
+  if (!preferenceId) return;
+  try {
+    const res = await fetch(API_BASE + '/api/payment-status?preference_id=' + encodeURIComponent(preferenceId));
+    const data = await res.json();
+    if (!data.success) return;
+
+    if (data.status === 'approved' && data.payment_id) {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
+      modal.classList.remove('show');
+      const s = card.querySelector('.card-status');
+      s.className = 'card-status show success';
+      s.textContent = '¡Pago aprobado! Generando tu Gift Card...';
+      setTimeout(() => {
+        window.location.href = '/regalo.html?payment_id=' + encodeURIComponent(data.payment_id) + '&servicio=' + encodeURIComponent(currentServicio);
+      }, 1200);
+    } else if (data.status === 'rejected') {
+      clearInterval(pollIntervalId);
+      pollIntervalId = null;
+      const s = card.querySelector('.card-status');
+      s.className = 'card-status show error';
+      s.textContent = 'Pago rechazado. Intenta nuevamente.';
+      const btn = card.querySelector('.buy-btn');
+      btn.disabled = false;
+      btn.textContent = 'Comprar Gift Card';
+    }
+  } catch (e) {}
+}
+
+modalClose.addEventListener('click', () => {
+  modal.classList.remove('show');
+  if (pollIntervalId) {
+    clearInterval(pollIntervalId);
+    pollIntervalId = null;
+  }
+  document.querySelectorAll('.card .buy-btn').forEach(b => {
+    b.disabled = false;
+    const isTest = b.closest('.card.test-card');
+    b.textContent = isTest ? 'Comprar (Test)' : 'Comprar Gift Card';
+  });
+  document.querySelectorAll('.card-status').forEach(s => {
+    s.className = 'card-status';
+    s.textContent = '';
+  });
+});
+</script>
 </body>
 </html>
