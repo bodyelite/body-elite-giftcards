@@ -780,71 +780,38 @@ buyBtn.addEventListener('click', async () => {
   }
 });
 
-function showWalletLoader(text, isError) {
-  walletContainer.innerHTML =
-    '<div class="wallet-loader' + (isError ? ' error' : '') + '">' +
-      (isError ? '' : '<div class="big-spinner"></div>') +
-      '<div>' + text + '</div>' +
-    '</div>';
-}
-
-async function destroyBrickIfAny() {
-  try {
-    if (window.checkoutBrickController && typeof window.checkoutBrickController.unmount === 'function') {
-      await window.checkoutBrickController.unmount();
-    }
-  } catch (e) {}
-  window.checkoutBrickController = null;
-}
-
 async function abrirModalPago() {
   modal.classList.add('show');
-  showWalletLoader('Preparando tu pago seguro...');
-
-  if (!MP_PUBLIC_KEY || MP_PUBLIC_KEY.indexOf('TU_PUBLIC_KEY') === 0) {
-    showWalletLoader('Falta configurar MP_PUBLIC_KEY', true);
-    return;
+  
+  if (window.checkoutBrickController) {
+    window.checkoutBrickController.unmount();
+    window.checkoutBrickController = null;
   }
 
-  await destroyBrickIfAny();
+  walletContainer.innerHTML = '<div class="wallet-loader"><div class="big-spinner"></div><div>Preparando tu pago seguro...</div></div>';
+
+  if (!mpInstance) mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
 
   setTimeout(async () => {
+    walletContainer.innerHTML = '';
     try {
-      if (!mpInstance) {
-        mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
-      }
-
-      walletContainer.innerHTML = '';
-      const loaderDiv = document.createElement('div');
-      loaderDiv.className = 'wallet-loader';
-      loaderDiv.id = 'wallet-loader-active';
-      loaderDiv.innerHTML = '<div class="big-spinner"></div><div>Preparando tu pago seguro...</div>';
-      walletContainer.appendChild(loaderDiv);
-
-      const target = document.createElement('div');
-      target.id = 'wallet_target';
-      walletContainer.appendChild(target);
-
       const bricksBuilder = mpInstance.bricks();
-      window.checkoutBrickController = await bricksBuilder.create('wallet', 'wallet_target', {
+      window.checkoutBrickController = await bricksBuilder.create('wallet', 'wallet_container', {
         initialization: { preferenceId: preferenceId },
         customization: { texts: { valueProp: 'smart_option' } },
         callbacks: {
-          onReady: () => {
-            const ld = document.getElementById('wallet-loader-active');
-            if (ld) ld.remove();
-            iniciarPolling();
-          },
-          onError: () => {
-            showWalletLoader('No se pudo cargar el pago. Cierra y reintenta.', true);
+          onReady: () => { iniciarPolling(); },
+          onError: (err) => {
+            console.error(err);
+            walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>No se pudo cargar el pago. Cierra y reintenta.</div></div>';
           },
           onSubmit: () => {}
         }
       });
     } catch (e) {
-      showWalletLoader('Error: ' + e.message, true);
+      walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>Error al inicializar: ' + e.message + '</div></div>';
     }
-  }, 300);
+  }, 500); 
 }
 
 function iniciarPolling() {
@@ -878,16 +845,16 @@ async function consultarStatus() {
   } catch (e) {}
 }
 
-modalClose.addEventListener('click', async () => {
+modalClose.addEventListener('click', () => {
   modal.classList.remove('show');
   if (pollIntervalId) {
     clearInterval(pollIntervalId);
     pollIntervalId = null;
   }
-  await destroyBrickIfAny();
-  setTimeout(() => {
-    showWalletLoader('Preparando tu pago seguro...');
-  }, 300);
+  if (window.checkoutBrickController) {
+    window.checkoutBrickController.unmount();
+    window.checkoutBrickController = null;
+  }
   buyBtn.disabled = false;
   refreshButton();
   hideStatus();
