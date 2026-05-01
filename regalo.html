@@ -1,587 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Body Elite | Día de la Madre</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { min-height: 100vh; }
-  body {
-    font-family: 'Montserrat', sans-serif;
-    color: #3a2520;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 28px 20px;
-    position: relative;
-    overflow-x: hidden;
-    background:
-      radial-gradient(ellipse at 20% 10%, rgba(245, 220, 210, 0.85) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 25%, rgba(232, 195, 188, 0.7) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 90%, rgba(199, 139, 139, 0.35) 0%, transparent 55%),
-      radial-gradient(ellipse at 10% 80%, rgba(250, 235, 225, 0.9) 0%, transparent 50%),
-      linear-gradient(135deg, #fdf6f1 0%, #f7e8df 45%, #f0d6c8 100%);
-    background-attachment: fixed;
-  }
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 18% 22%, rgba(255, 210, 195, 0.3) 0%, transparent 8%),
-      radial-gradient(circle at 82% 32%, rgba(220, 165, 150, 0.25) 0%, transparent 10%),
-      radial-gradient(circle at 28% 78%, rgba(240, 185, 170, 0.28) 0%, transparent 9%),
-      radial-gradient(circle at 78% 88%, rgba(199, 139, 139, 0.22) 0%, transparent 11%);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .container {
-    position: relative;
-    z-index: 1;
-    background: rgba(255, 252, 250, 0.78);
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
-    max-width: 580px;
-    width: 100%;
-    padding: 44px 40px 40px;
-    border-radius: 24px;
-    box-shadow:
-      0 40px 100px rgba(120, 60, 50, 0.18),
-      0 8px 32px rgba(199, 139, 139, 0.15),
-      0 0 0 1px rgba(255, 255, 255, 0.6) inset;
-    border: 1px solid rgba(199, 139, 139, 0.25);
-  }
-  .logo-wrap { text-align: center; margin-bottom: 18px; }
-  .logo-wrap img { max-width: 120px; height: auto; display: inline-block; }
-  .campaign {
-    text-align: center;
-    font-family: 'Great Vibes', cursive;
-    font-size: 44px;
-    color: #c78b8b;
-    margin-bottom: 2px;
-    line-height: 1;
-    text-shadow: 0 2px 8px rgba(199, 139, 139, 0.2);
-  }
-  .subtitle {
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: #8a5f55;
-    font-size: 13px;
-    letter-spacing: 4px;
-    margin-bottom: 32px;
-    text-transform: uppercase;
-    font-weight: 400;
-  }
-  .ornament {
-    text-align: center;
-    color: #c78b8b;
-    font-size: 18px;
-    letter-spacing: 8px;
-    margin: 6px 0 22px;
-    opacity: 0.7;
-  }
-  .status {
-    padding: 16px 18px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    font-size: 14px;
-    text-align: center;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-  }
-  .status.loading {
-    background: linear-gradient(135deg, rgba(245, 225, 215, 0.7), rgba(240, 215, 200, 0.7));
-    color: #6a4030;
-    border: 1px solid rgba(199, 139, 139, 0.2);
-  }
-  .status.error {
-    background: linear-gradient(135deg, rgba(253, 232, 232, 0.95), rgba(248, 210, 210, 0.95));
-    color: #a02020;
-    border: 1px solid rgba(180, 50, 50, 0.25);
-  }
-  .status.success {
-    background: linear-gradient(135deg, rgba(232, 245, 233, 0.85), rgba(220, 240, 222, 0.85));
-    color: #2a6f2e;
-    border: 1px solid rgba(80, 140, 90, 0.25);
-  }
-  .servicio-wrap { text-align: center; margin-bottom: 26px; }
-  .servicio-tag {
-    display: inline-block;
-    background: linear-gradient(135deg, #2a1810 0%, #4a2820 100%);
-    color: #e8c8a8;
-    padding: 9px 22px;
-    border-radius: 30px;
-    font-family: 'Playfair Display', serif;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    border: 1px solid #c78b8b;
-    font-weight: 500;
-  }
-  #form-section { display: none; }
-  canvas { display: none; }
-  .footer-note {
-    text-align: center;
-    margin-top: 22px;
-    font-size: 12px;
-    color: #8a6055;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    letter-spacing: 0.3px;
-  }
-</style>
+    <meta charset="UTF-8">
+    <title>Tu Experiencia Body Elite</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: 'Helvetica', sans-serif; background: #f4f4f4; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        #render-area { width: 800px; background: white; padding: 40px; box-sizing: border-box; }
+        .mensaje-bloque { text-align: center; margin-bottom: 40px; padding: 20px; border-bottom: 1px solid #eee; }
+        .mensaje-bloque h2 { color: #c5a059; font-style: italic; font-size: 28px; }
+        .mensaje-bloque p { font-size: 18px; color: #444; line-height: 1.6; }
+        .gift-card-final { width: 700px; height: 467px; margin: 0 auto; position: relative; background-size: cover; }
+        .dato-input { position: absolute; font-size: 16px; color: #555; font-weight: 600; left: 130px; }
+        #val-para { top: 365px; }
+        #val-de { top: 396px; }
+        #val-servicio { top: 428px; }
+        .btn-descarga { margin-top: 20px; background: #2c2c2c; color: white; padding: 15px 40px; border-radius: 50px; cursor: pointer; border: none; font-weight: bold; }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div class="logo-wrap">
-    <img src="logo.png" alt="Body Elite" onerror="this.style.display='none'">
-  </div>
-  <div class="campaign">Día de la Madre</div>
-  <div class="subtitle">Pack Digital de Regalo</div>
-  <div class="ornament">· · ·</div>
-  <div id="status" class="status loading">Verificando tu pago...</div>
-  <div id="form-section">
-    <div class="servicio-wrap"><span class="servicio-tag" id="servicio-tag"></span></div>
-    <input type="hidden" id="para">
-    <input type="hidden" id="de">
-    <input type="hidden" id="mensaje">
-    <input type="radio" id="rol-hijo" name="rol" value="hijo" style="display:none">
-    <input type="radio" id="rol-hija" name="rol" value="hija" style="display:none" checked>
-  </div>
-  <div class="footer-note">Tu Pack se descargará automáticamente</div>
-  <canvas id="canvas-final" width="1080" height="2010"></canvas>
-</div>
-
-<script>
-const API_BASE = 'https://body-elite-giftcards.onrender.com'; 
-
-const params = new URLSearchParams(window.location.search);
-const paymentId = params.get('payment_id');
-const servicio = params.get('servicio') || 'Tratamiento Body Elite';
-
-const statusEl = document.getElementById('status');
-const formSection = document.getElementById('form-section');
-const servicioTag = document.getElementById('servicio-tag');
-const canvasFinal = document.getElementById('canvas-final');
-
-const WHATSAPP_QR_URL = 'https://wa.me/56983300262?text=Hola%20Zara,%20quiero%20agendar%20mi%20giftcard%20del%20dia%20de%20la%20madre';
-const WHATSAPP_NUMBER = '56983300262';
-
-function showError(msg) {
-  statusEl.className = 'status error';
-  statusEl.textContent = msg;
-  formSection.style.display = 'none';
-}
-
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function loadImage(src, anonymous) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    if (anonymous) img.crossOrigin = 'Anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error('No se pudo cargar la imagen: ' + src));
-    img.src = src;
-  });
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight, align) {
-  const words = text.split(/\s+/);
-  const lines = [];
-  let line = '';
-  for (let i = 0; i < words.length; i++) {
-    const test = line ? line + ' ' + words[i] : words[i];
-    if (ctx.measureText(test).width > maxWidth && line) {
-      lines.push(line);
-      line = words[i];
-    } else {
-      line = test;
-    }
-  }
-  if (line) lines.push(line);
-  if (align === 'center-block') {
-    const totalH = lines.length * lineHeight;
-    const startY = y - totalH / 2 + lineHeight / 2;
-    lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lineHeight));
-  } else {
-    lines.forEach((ln, i) => ctx.fillText(ln, x, y + i * lineHeight));
-  }
-  return lines.length * lineHeight;
-}
-
-function drawTapizFondo(ctx, W, H) {
-  const base = ctx.createLinearGradient(0, 0, W, H);
-  base.addColorStop(0, '#fdf6f1');
-  base.addColorStop(0.5, '#f7e8df');
-  base.addColorStop(1, '#f0d6c8');
-  ctx.fillStyle = base;
-  ctx.fillRect(0, 0, W, H);
-
-  const blobs = [
-    {x: W*0.18, y: H*0.10, r: 480, c: [245, 220, 210, 0.55]},
-    {x: W*0.85, y: H*0.22, r: 420, c: [232, 195, 188, 0.45]},
-    {x: W*0.72, y: H*0.85, r: 500, c: [199, 139, 139, 0.25]},
-    {x: W*0.10, y: H*0.78, r: 460, c: [250, 235, 225, 0.65]},
-    {x: W*0.55, y: H*0.50, r: 380, c: [240, 220, 215, 0.35]},
-  ];
-  blobs.forEach(b => {
-    const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-    g.addColorStop(0, `rgba(${b.c[0]}, ${b.c[1]}, ${b.c[2]}, ${b.c[3]})`);
-    g.addColorStop(1, `rgba(${b.c[0]}, ${b.c[1]}, ${b.c[2]}, 0)`);
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
-  });
-
-  ctx.save();
-  ctx.globalAlpha = 0.06;
-  for (let i = 0; i < 80; i++) {
-    const sx = Math.random() * W;
-    const sy = Math.random() * H;
-    const sr = Math.random() * 1.8;
-    ctx.fillStyle = '#c78b8b';
-    ctx.beginPath();
-    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-function roundedPath(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
-}
-
-function drawCardWithShadow(ctx, x, y, w, h, radius, fillFn) {
-  ctx.save();
-  ctx.shadowColor = 'rgba(90, 50, 40, 0.35)';
-  ctx.shadowBlur = 30;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 14;
-  ctx.fillStyle = '#ffffff';
-  roundedPath(ctx, x, y, w, h, radius);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.save();
-  roundedPath(ctx, x, y, w, h, radius);
-  ctx.clip();
-  if (fillFn) fillFn();
-  ctx.restore();
-}
-
-async function renderFinal(para, de, mensaje, rol) {
-
-  const LAYOUT = {
-    EMOTIVA: {
-      X: 50, Y: 60, WIDTH: 980, HEIGHT: 980, RADIUS: 18,
-      BG_GRAD_FROM: '#fff5f0', BG_GRAD_MID: '#f5dccd', BG_GRAD_TO: '#e8c8b8',
-      FRAME_OUTER_INSET: 30, FRAME_INNER_INSET: 45,
-      FRAME_OUTER_COLOR: '#c78b8b', FRAME_INNER_COLOR: '#e0a8a8',
-      LOGO_Y: 100, LOGO_HEIGHT: 110,
-      TITLE_TEXT: '¡Feliz Día Mamá!', TITLE_Y: 280,
-      TITLE_FONT: '400 100px "Great Vibes", cursive', TITLE_COLOR: '#a66a6a',
-      ORNAMENT_TOP_Y: 345, ORNAMENT_BOTTOM_Y: 800, ORNAMENT_WIDTH: 220, ORNAMENT_COLOR: '#c78b8b',
-      MESSAGE_Y: 575, MESSAGE_MAX_WIDTH: 760, MESSAGE_LINE_HEIGHT: 56,
-      MESSAGE_FONT: 'italic 400 38px "Cormorant Garamond", serif', MESSAGE_COLOR: '#3a2520',
-      SIGN_LABEL_Y: 865, SIGN_LABEL_FONT: 'italic 400 34px "Playfair Display", serif', SIGN_LABEL_COLOR: '#6a4030',
-      SIGN_NAME_Y: 935, SIGN_NAME_FONT: '400 60px "Great Vibes", cursive', SIGN_NAME_COLOR: '#a66a6a',
-    },
-    GIFTCARD_HIJA: {
-      CARD: { X: 50, Y: 1100, WIDTH: 980, HEIGHT: 653, RADIUS: 18 },
-      PARA_X: 525, PARA_Y: 380, DE_X: 525, DE_Y: 428,
-      TRATAMIENTO_X: 525, TRATAMIENTO_Y: 488,
-      TRATAMIENTO_MAX_WIDTH: 380, TEXT_BASELINE: 'middle',
-      QR_X: 855, QR_Y: 220, QR_WITH_BG_BOX: false,
-    },
-    GIFTCARD_HIJO: {
-      CARD: { X: 50, Y: 1100, WIDTH: 980, HEIGHT: 718, RADIUS: 18 },
-      PARA_X: 210, PARA_Y: 506, DE_X: 210, DE_Y: 548,
-      TRATAMIENTO_X: 210, TRATAMIENTO_Y: 587,
-      TRATAMIENTO_MAX_WIDTH: 540, TEXT_BASELINE: 'bottom',
-      QR_X: 871, QR_Y: 600, QR_WITH_BG_BOX: true,
-    },
-  };
-
-  const QR_SIZE = 90;
-  const TRATAMIENTO_LINE_HEIGHT = 22;
-
-  const c = canvasFinal;
-  const ctx = c.getContext('2d');
-  const W = c.width;
-  const H = c.height;
-
-  ctx.clearRect(0, 0, W, H);
-  drawTapizFondo(ctx, W, H);
-
-  let logoImg = null;
-  try { logoImg = await loadImage('logo.png', false); } catch (e) { logoImg = null; }
-
-  const E = LAYOUT.EMOTIVA;
-
-  drawCardWithShadow(ctx, E.X, E.Y, E.WIDTH, E.HEIGHT, E.RADIUS, () => {
-    const cx = E.X + E.WIDTH / 2;
-    const ecy = E.Y + E.HEIGHT / 2;
-
-    const bg = ctx.createRadialGradient(cx, ecy - E.HEIGHT*0.05, E.WIDTH * 0.1, cx, ecy, E.WIDTH * 0.7);
-    bg.addColorStop(0, E.BG_GRAD_FROM);
-    bg.addColorStop(0.55, E.BG_GRAD_MID);
-    bg.addColorStop(1, E.BG_GRAD_TO);
-    ctx.fillStyle = bg;
-    ctx.fillRect(E.X, E.Y, E.WIDTH, E.HEIGHT);
-
-    ctx.save();
-    ctx.globalAlpha = 0.18;
-    for (let i = 0; i < 6; i++) {
-      const px = E.X + Math.random() * E.WIDTH;
-      const py = E.Y + Math.random() * E.HEIGHT;
-      const pr = 60 + Math.random() * 140;
-      const pg = ctx.createRadialGradient(px, py, 0, px, py, pr);
-      pg.addColorStop(0, 'rgba(199, 139, 139, 0.4)');
-      pg.addColorStop(1, 'rgba(199, 139, 139, 0)');
-      ctx.fillStyle = pg;
-      ctx.beginPath();
-      ctx.arc(px, py, pr, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-
-    const m1 = E.FRAME_OUTER_INSET, m2 = E.FRAME_INNER_INSET;
-    ctx.strokeStyle = E.FRAME_OUTER_COLOR;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(E.X + m1, E.Y + m1, E.WIDTH - m1 * 2, E.HEIGHT - m1 * 2);
-    ctx.strokeStyle = E.FRAME_INNER_COLOR;
-    ctx.lineWidth = 1;
-    ctx.strokeRect(E.X + m2, E.Y + m2, E.WIDTH - m2 * 2, E.HEIGHT - m2 * 2);
-
-    ctx.fillStyle = E.FRAME_OUTER_COLOR;
-    [[E.X + m1, E.Y + m1], [E.X + E.WIDTH - m1, E.Y + m1], [E.X + m1, E.Y + E.HEIGHT - m1], [E.X + E.WIDTH - m1, E.Y + E.HEIGHT - m1]].forEach(([x, y]) => {
-      ctx.beginPath();
-      ctx.arc(x, y, 5, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    if (logoImg) {
-      const ratio = logoImg.width / logoImg.height;
-      const logoH = E.LOGO_HEIGHT;
-      const logoW = logoH * ratio;
-      ctx.drawImage(logoImg, cx - logoW/2, E.Y + E.LOGO_Y, logoW, logoH);
-    }
-
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'alphabetic';
-
-    ctx.fillStyle = E.TITLE_COLOR;
-    ctx.font = E.TITLE_FONT;
-    ctx.fillText(E.TITLE_TEXT, cx, E.Y + E.TITLE_Y);
-
-    const ornTopY = E.Y + E.ORNAMENT_TOP_Y;
-    const ornG = ctx.createLinearGradient(cx - E.ORNAMENT_WIDTH, ornTopY, cx + E.ORNAMENT_WIDTH, ornTopY);
-    ornG.addColorStop(0, 'rgba(199, 139, 139, 0)');
-    ornG.addColorStop(0.5, 'rgba(199, 139, 139, 1)');
-    ornG.addColorStop(1, 'rgba(199, 139, 139, 0)');
-    ctx.fillStyle = ornG;
-    ctx.fillRect(cx - E.ORNAMENT_WIDTH, ornTopY, E.ORNAMENT_WIDTH * 2, 1.5);
-    ctx.fillStyle = E.ORNAMENT_COLOR;
-    ctx.beginPath();
-    ctx.arc(cx, ornTopY + 0.75, 5, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = E.MESSAGE_COLOR;
-    ctx.font = E.MESSAGE_FONT;
-    wrapText(ctx, mensaje, cx, E.Y + E.MESSAGE_Y, E.MESSAGE_MAX_WIDTH, E.MESSAGE_LINE_HEIGHT, 'center-block');
-
-    const ornBotY = E.Y + E.ORNAMENT_BOTTOM_Y;
-    const ornG2 = ctx.createLinearGradient(cx - E.ORNAMENT_WIDTH, ornBotY, cx + E.ORNAMENT_WIDTH, ornBotY);
-    ornG2.addColorStop(0, 'rgba(199, 139, 139, 0)');
-    ornG2.addColorStop(0.5, 'rgba(199, 139, 139, 1)');
-    ornG2.addColorStop(1, 'rgba(199, 139, 139, 0)');
-    ctx.fillStyle = ornG2;
-    ctx.fillRect(cx - E.ORNAMENT_WIDTH, ornBotY, E.ORNAMENT_WIDTH * 2, 1.5);
-
-    ctx.fillStyle = E.SIGN_LABEL_COLOR;
-    ctx.font = E.SIGN_LABEL_FONT;
-    ctx.fillText('Con amor,', cx, E.Y + E.SIGN_LABEL_Y);
-
-    ctx.fillStyle = E.SIGN_NAME_COLOR;
-    ctx.font = E.SIGN_NAME_FONT;
-    ctx.fillText(de, cx, E.Y + E.SIGN_NAME_Y);
-  });
-
-  const G = rol === 'hijo' ? LAYOUT.GIFTCARD_HIJO : LAYOUT.GIFTCARD_HIJA;
-  const CG = G.CARD;
-  const giftcardSrc = rol === 'hijo' ? 'giftcard-hijo.jpg' : 'giftcard-hija.jpg';
-
-  drawCardWithShadow(ctx, CG.X, CG.Y, CG.WIDTH, CG.HEIGHT, CG.RADIUS, () => {});
-
-  ctx.save();
-  roundedPath(ctx, CG.X, CG.Y, CG.WIDTH, CG.HEIGHT, CG.RADIUS);
-  ctx.clip();
-
-  try {
-    const giftImg = await loadImage(giftcardSrc, false);
-    ctx.drawImage(giftImg, CG.X, CG.Y, CG.WIDTH, CG.HEIGHT);
-  } catch (err) {
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(CG.X, CG.Y, CG.WIDTH, CG.HEIGHT);
-    ctx.fillStyle = '#c78b8b';
-    ctx.textAlign = 'center';
-    ctx.font = 'italic 400 28px "Playfair Display", serif';
-    ctx.fillText('(Imagen no encontrada: ' + giftcardSrc + ')', CG.X + CG.WIDTH/2, CG.Y + CG.HEIGHT/2);
-  }
-
-  ctx.textAlign = 'left';
-  ctx.textBaseline = G.TEXT_BASELINE;
-
-  ctx.fillStyle = '#3a2520';
-  ctx.font = 'italic 500 28px "Playfair Display", serif';
-  ctx.fillText(para, CG.X + G.PARA_X, CG.Y + G.PARA_Y);
-
-  ctx.font = 'italic 500 28px "Playfair Display", serif';
-  ctx.fillText(de, CG.X + G.DE_X, CG.Y + G.DE_Y);
-
-  ctx.font = '600 18px "Montserrat", sans-serif';
-  if (G.TEXT_BASELINE === 'bottom') {
-    ctx.fillText(servicio, CG.X + G.TRATAMIENTO_X, CG.Y + G.TRATAMIENTO_Y);
-  } else {
-    ctx.textBaseline = 'top';
-    wrapText(ctx, servicio, CG.X + G.TRATAMIENTO_X, CG.Y + G.TRATAMIENTO_Y, G.TRATAMIENTO_MAX_WIDTH, TRATAMIENTO_LINE_HEIGHT, 'top');
-  }
-
-  const qrCenterX = CG.X + G.QR_X;
-  const qrCenterY = CG.Y + G.QR_Y;
-  const qrTopX = qrCenterX - QR_SIZE / 2;
-  const qrTopY = qrCenterY - QR_SIZE / 2;
-
-  if (G.QR_WITH_BG_BOX) {
-    const pad = 8;
-    ctx.save();
-    ctx.shadowColor = 'rgba(90, 50, 40, 0.35)';
-    ctx.shadowBlur = 14;
-    ctx.shadowOffsetY = 4;
-    ctx.fillStyle = '#ffffff';
-    roundedPath(ctx, qrTopX - pad, qrTopY - pad, QR_SIZE + pad*2, QR_SIZE + pad*2, 8);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  try {
-    const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(WHATSAPP_QR_URL) + '&color=2a1810&bgcolor=ffffff&margin=0';
-    const qrImg = await loadImage(qrApiUrl, true);
-    if (!G.QR_WITH_BG_BOX) {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(qrTopX, qrTopY, QR_SIZE, QR_SIZE);
-    }
-    ctx.drawImage(qrImg, qrTopX, qrTopY, QR_SIZE, QR_SIZE);
-  } catch (err) {
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(qrTopX, qrTopY, QR_SIZE, QR_SIZE);
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#2a1810';
-    ctx.font = '600 9px "Playfair Display", serif';
-    ctx.fillText('AGENDAR EN:', qrCenterX, qrCenterY - 14);
-    ctx.font = '700 11px "Montserrat", sans-serif';
-    ctx.fillText('+' + WHATSAPP_NUMBER, qrCenterX, qrCenterY + 4);
-    ctx.font = 'italic 400 9px "Cormorant Garamond", serif';
-    ctx.fillText('WhatsApp', qrCenterX, qrCenterY + 20);
-  }
-
-  ctx.restore();
-  ctx.textBaseline = 'alphabetic';
-}
-
-function downloadAsPDF(canvas, filename) {
-  const imgData = canvas.toDataURL('image/jpeg', 0.95);
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'px',
-    format: [canvas.width, canvas.height],
-    hotfixes: ['px_scaling']
-  });
-  doc.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
-  doc.save(filename);
-}
-
-async function init() {
-  if (!paymentId) {
-    showError('Falta el identificador de pago en la URL.');
-    return;
-  }
-
-  try {
-    const res = await fetch(API_BASE + '/api/giftcard-data?payment_id=' + encodeURIComponent(paymentId));
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
-      showError(data.error || 'No se pudo recuperar la información de tu Gift Card.');
-      return;
-    }
-
-    document.getElementById('para').value = data.para;
-    document.getElementById('de').value = data.de;
-    document.getElementById('mensaje').value = data.mensaje;
-    const rolInput = document.querySelector('input[name="rol"][value="' + data.rol + '"]');
-    if (rolInput) rolInput.checked = true;
-
-    if (data.label) servicioTag.textContent = data.label;
-    else servicioTag.textContent = data.servicio;
-    formSection.style.display = 'block';
-
-    await document.fonts.ready;
-
-    statusEl.className = 'status success';
-    statusEl.textContent = '¡Pago aprobado! Generando tu Pack de Regalo automáticamente...';
-
-    setTimeout(async () => {
-      try {
-        await renderFinal(data.para, data.de, data.mensaje, data.rol || 'hija');
-        await delay(150);
-
-        const burnRes = await fetch(API_BASE + '/api/validate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ payment_id: paymentId })
-        });
-        const burnData = await burnRes.json();
-        if (!burnRes.ok || !burnData.success) {
-          showError(burnData.error || 'No se pudo validar la descarga.');
-          return;
+    <div id="render-area" style="display:none;">
+        <div class="mensaje-bloque">
+            <h2>Una dedicatoria especial</h2>
+            <p id="txt-mensaje"></p>
+        </div>
+        <div id="card-img" class="gift-card-final">
+            <div id="val-para" class="dato-input"></div>
+            <div id="val-de" class="dato-input"></div>
+            <div id="val-servicio" class="dato-input"></div>
+        </div>
+    </div>
+    <button id="download-btn" class="btn-descarga" style="display:none;">DESCARGAR PDF</button>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        if (paymentId) {
+            fetch(`https://body-elite-giftcards.onrender.com/api/pago/${paymentId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.status === 'approved') {
+                        const m = data.metadata;
+                        const card = document.getElementById('card-img');
+                        card.style.backgroundImage = `url('${m.rol === 'Hija' ? 'giftcard-hija.jpg' : 'giftcard-hijo.jpg'}')`;
+                        document.getElementById('txt-mensaje').innerText = m.mensaje;
+                        document.getElementById('val-para').innerText = m.para;
+                        document.getElementById('val-de').innerText = m.de;
+                        document.getElementById('val-servicio').innerText = m.servicio.toUpperCase();
+                        document.getElementById('render-area').style.display = 'block';
+                        document.getElementById('download-btn').style.display = 'block';
+                    }
+                });
         }
-
-        const stamp = Date.now();
-        downloadAsPDF(canvasFinal, 'BodyElite-GiftCard-' + stamp + '.pdf');
-
-        statusEl.className = 'status success';
-        statusEl.textContent = '¡Listo! Tu Gift Card se descargó. Revisa tu carpeta de descargas.';
-        formSection.style.display = 'none';
-      } catch (e) {
-        showError('Error generando el pack: ' + e.message);
-      }
-    }, 800);
-
-  } catch (e) {
-    showError('Error: ' + e.message);
-  }
-}
-
-init();
-</script>
+        document.getElementById('download-btn').addEventListener('click', () => {
+            html2canvas(document.getElementById('render-area'), { scale: 2 }).then(canvas => {
+                const img = canvas.toDataURL('image/jpeg', 0.95);
+                const pdf = new jspdf.jsPDF('p', 'px', [800, 1000]);
+                pdf.addImage(img, 'JPEG', 0, 0, 800, 1000);
+                pdf.save('GiftCard-BodyElite.pdf');
+            });
+        });
+    </script>
 </body>
 </html>
