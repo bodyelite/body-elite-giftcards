@@ -36,7 +36,7 @@
 
   .header {
     text-align: center;
-    padding: 64px 20px 48px;
+    padding: 56px 20px 40px;
     position: relative;
   }
   .header::after {
@@ -45,9 +45,9 @@
     width: 80px;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 32px auto 0;
+    margin: 28px auto 0;
   }
-  .logo-wrap { margin-bottom: 18px; }
+  .logo-wrap { margin-bottom: 16px; }
   .logo-wrap img { max-width: 130px; height: auto; }
   .brand-tag {
     font-family: 'Playfair Display', serif;
@@ -56,12 +56,12 @@
     font-size: 12px;
     letter-spacing: 5px;
     text-transform: uppercase;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
   .campaign-script {
     font-family: 'Great Vibes', cursive;
     color: var(--rose);
-    font-size: 56px;
+    font-size: 54px;
     line-height: 1;
     margin-bottom: 4px;
   }
@@ -69,7 +69,7 @@
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     color: var(--dark);
-    font-size: 42px;
+    font-size: 40px;
     letter-spacing: 4px;
     text-transform: uppercase;
     margin-top: 8px;
@@ -79,13 +79,13 @@
     font-style: italic;
     color: var(--muted);
     font-size: 18px;
-    margin-top: 18px;
+    margin-top: 16px;
   }
   .location-tag {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 24px;
+    margin-top: 22px;
     padding: 8px 18px;
     border: 1px solid rgba(197, 160, 89, 0.35);
     border-radius: 30px;
@@ -104,10 +104,10 @@
   .grid {
     max-width: 1240px;
     margin: 0 auto;
-    padding: 16px 24px 48px;
+    padding: 12px 24px 48px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
   }
 
   .card {
@@ -124,11 +124,17 @@
     position: relative;
   }
   .card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
     box-shadow:
-      0 22px 50px rgba(60, 30, 20, 0.14),
+      0 18px 44px rgba(60, 30, 20, 0.12),
       0 0 0 1px rgba(255, 255, 255, 0.7) inset;
     border-color: rgba(197, 160, 89, 0.4);
+  }
+  .card.is-open {
+    border-color: var(--gold);
+    box-shadow:
+      0 22px 50px rgba(60, 30, 20, 0.16),
+      0 0 0 1px rgba(255, 255, 255, 0.7) inset;
   }
   .card.test-card {
     border: 1px dashed rgba(197, 160, 89, 0.5);
@@ -137,9 +143,10 @@
   .card.test-card .card-header {
     background: linear-gradient(135deg, #f5f0eb, #ebe0d3);
   }
+
   .card-header {
     background: linear-gradient(135deg, #fdf6ee 0%, #f3e2cf 100%);
-    padding: 28px 28px 22px;
+    padding: 26px 26px 22px;
     border-bottom: 1px solid rgba(197, 160, 89, 0.18);
     position: relative;
   }
@@ -174,17 +181,80 @@
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     color: var(--dark);
-    font-size: 32px;
+    font-size: 30px;
   }
   .card-price .currency {
-    font-size: 18px;
+    font-size: 17px;
     color: var(--gold-deep);
     font-weight: 500;
     margin-right: 4px;
     vertical-align: top;
     line-height: 1.6;
   }
-  .card-body { padding: 24px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+
+  .accordion-toggle {
+    width: 100%;
+    padding: 16px 22px;
+    background: #ffffff;
+    color: var(--dark);
+    border: none;
+    border-bottom: 1px solid rgba(197, 160, 89, 0.18);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    transition: background .25s, color .25s;
+  }
+  .accordion-toggle:hover {
+    background: #fdf6ee;
+    color: var(--gold-deep);
+  }
+  .accordion-toggle .toggle-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    color: var(--gold-deep);
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform .35s ease, background .25s;
+    font-weight: 400;
+  }
+  .card.is-open .accordion-toggle {
+    background: var(--dark);
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+  .card.is-open .accordion-toggle .toggle-icon {
+    background: var(--gold);
+    color: var(--dark);
+    border-color: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .card-body-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .45s ease;
+  }
+  .card.is-open .card-body-wrap {
+    max-height: 1400px;
+  }
+  .card-body {
+    padding: 24px 26px 26px;
+    display: flex;
+    flex-direction: column;
+  }
 
   .form-group { margin-bottom: 14px; }
   label {
@@ -267,8 +337,6 @@
     cursor: pointer;
     font-weight: 600;
     transition: transform .25s, box-shadow .25s, background .25s;
-    position: relative;
-    overflow: hidden;
   }
   button.buy-btn:hover:not(:disabled) {
     transform: translateY(-1px);
@@ -312,7 +380,12 @@
     display: block;
     margin-bottom: 6px;
   }
-  .footer .addr { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.5px; }
+  .footer .addr {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
 
   .modal-backdrop {
     display: none;
@@ -354,7 +427,28 @@
     cursor: pointer;
     padding: 4px 10px;
   }
-  #wallet_container { min-height: 60px; }
+  #wallet_container { min-height: 80px; position: relative; }
+
+  .wallet-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+  }
+  .wallet-loader .big-spinner {
+    width: 38px;
+    height: 38px;
+    border: 3px solid rgba(197, 160, 89, 0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
 
   .spinner {
     display: inline-block;
@@ -370,10 +464,15 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 600px) {
-    .campaign-title { font-size: 30px; letter-spacing: 2px; }
-    .campaign-script { font-size: 44px; }
-    .grid { padding: 16px 16px 48px; gap: 22px; }
-    .header { padding: 48px 20px 32px; }
+    .campaign-title { font-size: 28px; letter-spacing: 2px; }
+    .campaign-script { font-size: 42px; }
+    .grid { padding: 12px 16px 40px; gap: 18px; }
+    .header { padding: 40px 20px 28px; }
+    .card-title { font-size: 22px; }
+    .card-price { font-size: 28px; }
+    .card-header { padding: 22px 22px 20px; }
+    .accordion-toggle { padding: 14px 18px; font-size: 11px; letter-spacing: 2px; }
+    .card-body { padding: 20px 22px 22px; }
   }
 </style>
 </head>
@@ -402,7 +501,12 @@
   <div class="modal-pago">
     <button class="modal-close" id="modal-close">×</button>
     <h3>Completar pago</h3>
-    <div id="wallet_container"></div>
+    <div id="wallet_container">
+      <div class="wallet-loader" id="wallet-loader">
+        <div class="big-spinner"></div>
+        <div>Preparando tu pago seguro...</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -427,6 +531,7 @@ const walletContainer = document.getElementById('wallet_container');
 let preferenceId = null;
 let pollIntervalId = null;
 let currentServicio = null;
+let currentCard = null;
 let mpInstance = null;
 
 function fmtCLP(n) {
@@ -441,38 +546,44 @@ function buildCard(s) {
       <div class="card-title">${s.title}</div>
       <div class="card-price"><span class="currency">$</span>${fmtCLP(s.price)}</div>
     </div>
-    <div class="card-body">
-      <div class="form-group">
-        <label>Para mamá</label>
-        <input type="text" class="i-para" maxlength="60" placeholder="Nombre de tu mamá">
-      </div>
-      <div class="form-group">
-        <label>De parte de</label>
-        <input type="text" class="i-de" maxlength="60" placeholder="Tu nombre">
-      </div>
-      <div class="form-group">
-        <label>Tu teléfono</label>
-        <input type="tel" class="i-telefono" maxlength="20" placeholder="+56 9 1234 5678">
-      </div>
-      <div class="form-group">
-        <label>Diseño de la Gift Card</label>
-        <div class="radio-group">
-          <div class="radio-option">
-            <input type="radio" id="rol-hijo-${s.key}" name="rol-${s.key}" value="hijo">
-            <label for="rol-hijo-${s.key}">Hijo</label>
-          </div>
-          <div class="radio-option">
-            <input type="radio" id="rol-hija-${s.key}" name="rol-${s.key}" value="hija" checked>
-            <label for="rol-hija-${s.key}">Hija</label>
+    <button class="accordion-toggle" type="button">
+      <span>${s.isTest ? 'Probar Gift Card' : 'Regalar esta Gift Card'}</span>
+      <span class="toggle-icon">+</span>
+    </button>
+    <div class="card-body-wrap">
+      <div class="card-body">
+        <div class="form-group">
+          <label>Para mamá</label>
+          <input type="text" class="i-para" maxlength="60" placeholder="Nombre de tu mamá">
+        </div>
+        <div class="form-group">
+          <label>De parte de</label>
+          <input type="text" class="i-de" maxlength="60" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>Tu teléfono</label>
+          <input type="tel" class="i-telefono" maxlength="20" placeholder="+56 9 1234 5678">
+        </div>
+        <div class="form-group">
+          <label>Diseño de la Gift Card</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="rol-hijo-${s.key}" name="rol-${s.key}" value="hijo">
+              <label for="rol-hijo-${s.key}">Hijo</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="rol-hija-${s.key}" name="rol-${s.key}" value="hija" checked>
+              <label for="rol-hija-${s.key}">Hija</label>
+            </div>
           </div>
         </div>
+        <div class="form-group">
+          <label>Dedicatoria</label>
+          <textarea class="i-mensaje" maxlength="320" placeholder="Escribe unas palabras desde el corazón...">Mamá, sacar belleza de este caos es virtud, pero tú lo haces ver fácil. Gracias por darme tanto y pedir tan poco. Hoy te toca a ti desconectar y dejarte regalonear como mereces. ¡Feliz día, te amo infinito!</textarea>
+        </div>
+        <button class="buy-btn" disabled>${s.isTest ? 'Comprar (Test)' : 'Comprar Gift Card'}</button>
+        <div class="card-status"></div>
       </div>
-      <div class="form-group">
-        <label>Dedicatoria</label>
-        <textarea class="i-mensaje" maxlength="320" placeholder="Escribe unas palabras desde el corazón...">Mamá, sacar belleza de este caos es virtud, pero tú lo haces ver fácil. Gracias por darme tanto y pedir tan poco. Hoy te toca a ti desconectar y dejarte regalonear como mereces. ¡Feliz día, te amo infinito!</textarea>
-      </div>
-      <button class="buy-btn" disabled>${s.isTest ? 'Comprar (Test)' : 'Comprar Gift Card'}</button>
-      <div class="card-status"></div>
     </div>
   </article>`;
 }
@@ -487,6 +598,24 @@ function setupCard(card) {
   const mensaje = card.querySelector('.i-mensaje');
   const btn = card.querySelector('.buy-btn');
   const statusEl = card.querySelector('.card-status');
+  const toggle = card.querySelector('.accordion-toggle');
+
+  toggle.addEventListener('click', () => {
+    const wasOpen = card.classList.contains('is-open');
+    document.querySelectorAll('.card.is-open').forEach(c => {
+      if (c !== card) c.classList.remove('is-open');
+    });
+    if (wasOpen) {
+      card.classList.remove('is-open');
+    } else {
+      card.classList.add('is-open');
+      setTimeout(() => {
+        const rect = card.getBoundingClientRect();
+        const offset = window.pageYOffset + rect.top - 24;
+        window.scrollTo({ top: offset, behavior: 'smooth' });
+      }, 150);
+    }
+  });
 
   function showStatus(msg, type) {
     statusEl.className = 'card-status show ' + (type || 'info');
@@ -534,8 +663,10 @@ function setupCard(card) {
       }
       preferenceId = data.preference_id;
       currentServicio = key;
+      currentCard = card;
       hideStatus();
-      abrirModalPago(card);
+      btn.textContent = origText;
+      abrirModalPago();
     } catch (e) {
       showStatus('Error: ' + e.message, 'error');
       btn.disabled = false;
@@ -546,38 +677,57 @@ function setupCard(card) {
 
 document.querySelectorAll('.card').forEach(setupCard);
 
-function abrirModalPago(card) {
+function showWalletLoader() {
+  walletContainer.innerHTML = '<div class="wallet-loader"><div class="big-spinner"></div><div>Preparando tu pago seguro...</div></div>';
+}
+
+function abrirModalPago() {
   modal.classList.add('show');
-  walletContainer.innerHTML = '';
+  showWalletLoader();
 
-  if (!mpInstance) {
-    if (!MP_PUBLIC_KEY || MP_PUBLIC_KEY === 'TU_PUBLIC_KEY_AQUI') {
-      const s = card.querySelector('.card-status');
-      s.className = 'card-status show error';
-      s.textContent = 'Falta configurar MP_PUBLIC_KEY en promos.html';
-      modal.classList.remove('show');
-      return;
-    }
-    mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
+  if (!MP_PUBLIC_KEY || MP_PUBLIC_KEY === 'TU_PUBLIC_KEY_AQUI') {
+    walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>Falta configurar MP_PUBLIC_KEY</div></div>';
+    return;
   }
-  const bricksBuilder = mpInstance.bricks();
-  bricksBuilder.create('wallet', 'wallet_container', {
-    initialization: { preferenceId: preferenceId },
-    customization: { texts: { valueProp: 'smart_option' } },
-    callbacks: {
-      onReady: () => { iniciarPolling(card); },
-      onError: () => {},
-      onSubmit: () => {}
+
+  setTimeout(() => {
+    try {
+      if (!mpInstance) {
+        mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
+      }
+      walletContainer.innerHTML = '<div class="wallet-loader" id="wallet-loader"><div class="big-spinner"></div><div>Preparando tu pago seguro...</div></div>';
+      const target = document.createElement('div');
+      target.id = 'wallet_target';
+      walletContainer.appendChild(target);
+
+      const bricksBuilder = mpInstance.bricks();
+      bricksBuilder.create('wallet', 'wallet_target', {
+        initialization: { preferenceId: preferenceId },
+        customization: { texts: { valueProp: 'smart_option' } },
+        callbacks: {
+          onReady: () => {
+            const loader = document.getElementById('wallet-loader');
+            if (loader) loader.remove();
+            iniciarPolling();
+          },
+          onError: (err) => {
+            walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>No se pudo cargar el pago. Cierra y reintenta.</div></div>';
+          },
+          onSubmit: () => {}
+        }
+      });
+    } catch (e) {
+      walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>Error: ' + e.message + '</div></div>';
     }
-  });
+  }, 300);
 }
 
-function iniciarPolling(card) {
+function iniciarPolling() {
   if (pollIntervalId) clearInterval(pollIntervalId);
-  pollIntervalId = setInterval(() => consultarStatus(card), 3000);
+  pollIntervalId = setInterval(consultarStatus, 3000);
 }
 
-async function consultarStatus(card) {
+async function consultarStatus() {
   if (!preferenceId) return;
   try {
     const res = await fetch(API_BASE + '/api/payment-status?preference_id=' + encodeURIComponent(preferenceId));
@@ -588,21 +738,26 @@ async function consultarStatus(card) {
       clearInterval(pollIntervalId);
       pollIntervalId = null;
       modal.classList.remove('show');
-      const s = card.querySelector('.card-status');
-      s.className = 'card-status show success';
-      s.textContent = '¡Pago aprobado! Generando tu Gift Card...';
+      if (currentCard) {
+        const s = currentCard.querySelector('.card-status');
+        s.className = 'card-status show success';
+        s.textContent = '¡Pago aprobado! Generando tu Gift Card...';
+      }
       setTimeout(() => {
         window.location.href = '/regalo.html?payment_id=' + encodeURIComponent(data.payment_id) + '&servicio=' + encodeURIComponent(currentServicio);
       }, 1200);
     } else if (data.status === 'rejected') {
       clearInterval(pollIntervalId);
       pollIntervalId = null;
-      const s = card.querySelector('.card-status');
-      s.className = 'card-status show error';
-      s.textContent = 'Pago rechazado. Intenta nuevamente.';
-      const btn = card.querySelector('.buy-btn');
-      btn.disabled = false;
-      btn.textContent = 'Comprar Gift Card';
+      if (currentCard) {
+        const s = currentCard.querySelector('.card-status');
+        s.className = 'card-status show error';
+        s.textContent = 'Pago rechazado. Intenta nuevamente.';
+        const btn = currentCard.querySelector('.buy-btn');
+        const isTest = currentCard.classList.contains('test-card');
+        btn.disabled = false;
+        btn.textContent = isTest ? 'Comprar (Test)' : 'Comprar Gift Card';
+      }
     }
   } catch (e) {}
 }
@@ -622,6 +777,9 @@ modalClose.addEventListener('click', () => {
     s.className = 'card-status';
     s.textContent = '';
   });
+  setTimeout(() => {
+    walletContainer.innerHTML = '<div class="wallet-loader" id="wallet-loader"><div class="big-spinner"></div><div>Preparando tu pago seguro...</div></div>';
+  }, 300);
 });
 </script>
 </body>
