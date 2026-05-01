@@ -10,7 +10,6 @@ const DATA_DIR = process.env.DATA_DIR || (process.env.RENDER ? '/var/data' : __d
 const DB_FILE = path.join(DATA_DIR, 'used_payments.json');
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || '';
-const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL || ('http://localhost:' + PORT);
 
 const PRECIOS = {
   hifu: { amount: 99450, label: 'HIFU 12D' },
@@ -52,15 +51,15 @@ function withLock(fn) {
   return writeLock;
 }
 
-function sanitize(str, maxLen) {
-  if (typeof str !== 'string') return '';
-  return str.trim().slice(0, maxLen);
-}
-
 app.post('/api/create-preference', async (req, res) => {
   try {
     const { servicio, para, de, mensaje, telefono, rol } = req.body || {};
     if (!servicio || !PRECIOS[servicio]) return res.status(400).json({ success: false, error: 'Servicio inválido' });
+    
+    if (!MP_ACCESS_TOKEN) {
+      throw new Error('Falta configurar el MP_ACCESS_TOKEN en el servidor');
+    }
+
     const precio = PRECIOS[servicio];
     const externalReference = crypto.randomBytes(12).toString('hex');
 
@@ -74,38 +73,37 @@ app.post('/api/create-preference', async (req, res) => {
         items: [{ title: 'Body Elite Gift Card - ' + precio.label, quantity: 1, currency_id: 'CLP', unit_price: precio.amount }],
         external_reference: externalReference,
         back_urls: {
-          success: PUBLIC_BASE_URL + '/regalo.html',
-          failure: PUBLIC_BASE_URL + '/promos.html',
-          pending: PUBLIC_BASE_URL + '/promos.html'
+          success: 'https://www.bodyelite.cl/regalo.html',
+          failure: 'https://www.bodyelite.cl/promos.html',
+          pending: 'https://www.bodyelite.cl/promos.html'
         },
         auto_return: 'approved'
       })
     });
 
     const mpData = await mpRes.json();
+    
+    if (!mpRes.ok || !mpData.id) {
+      throw new Error('MercadoPago rechazó la solicitud: ' + (mpData.message || 'Token inválido'));
+    }
+
     await withLock(async () => {
       const db = await readDb();
       db.preferences[mpData.id] = { servicio, para, de, mensaje, telefono, rol, externalReference, status: 'pending' };
       await writeDbAtomic(db);
     });
+    
     res.json({ success: true, preference_id: mpData.id, init_point: mpData.init_point });
-  } catch (err) { res.status(500).json({ success: false, error: err.message }); }
-});
-
-app.get('/api/payment-status', async (req, res) => {
-  const prefId = req.query.preference_id;
-  const db = await readDb();
-  const pref = db.preferences[prefId];
-  if (!pref) return res.status(404).json({ success: false, error: 'No encontrada' });
-  res.json({ success: true, status: pref.status || 'pending', payment_id: pref.payment_id });
+  } catch (err) { 
+    res.status(500).json({ success: false, error: err.message }); 
+  }
 });
 
 app.get('/api/giftcard-data', async (req, res) => {
-  const paymentId = req.query.payment_id;
+  const prefId = req.query.preference_id;
   const db = await readDb();
-  const prefEntry = Object.entries(db.preferences).find(([, p]) => p.payment_id === paymentId);
-  if (!prefEntry) return res.status(404).json({ success: false, error: 'Datos no encontrados' });
-  const [, p] = prefEntry;
+  const p = db.preferences[prefId];
+  if (!p) return res.status(404).json({ success: false, error: 'Datos no encontrados' });
   res.json({ success: true, ...p, label: PRECIOS[p.servicio].label });
 });
 
