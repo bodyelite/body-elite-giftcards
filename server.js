@@ -63,5 +63,16 @@ app.post('/api/validate', async (req, res) => {
 app.get('/api/health', (req, res) => res.json({ ok: true, db: DB_FILE }));
 
 ensureDbFile().then(() => {
-  app.listen(PORT, () => console.log('Server on ' + PORT + ' | DB: ' + DB_FILE));
+  
+app.get('/api/precios', (req, res) => {
+  res.json({
+    "hifu": { label: "HIFU 12D (Día de la Madre)", amount: 99450 },
+    "toxina": { label: "Toxina Botulínica (Día de la Madre)", amount: 162500 },
+    "pinkglow": { label: "Pink Glow (Día de la Madre)", amount: 59800 },
+    "adn": { label: "ADN de Salmón (Día de la Madre)", amount: 69550 },
+    "limpieza": { label: "Limpieza Profunda (Día de la Madre)", amount: 39000 }
+  });
+});
+
+app.listen(PORT, () => console.log('Server on ' + PORT + ' | DB: ' + DB_FILE));
 });
