@@ -635,7 +635,7 @@
 
 <script>
 const API_BASE = 'https://body-elite-giftcards.onrender.com';
-const MP_PUBLIC_KEY = 'APP_USR-2929443570544346-043019-8759fbf6f737bb580a469f27b90bd0c5-2665758946';
+const MP_PUBLIC_KEY = 'APP_USR-da1ce8bc-2dfb-4ba2-a7f2-14ea0a257628';
 
 const SERVICIOS = [
   { key: 'hifu',     title: 'HIFU 12D',                eyebrow: 'Lifting sin cirugía',     price: 99450 },
@@ -780,38 +780,71 @@ buyBtn.addEventListener('click', async () => {
   }
 });
 
+function showWalletLoader(text, isError) {
+  walletContainer.innerHTML =
+    '<div class="wallet-loader' + (isError ? ' error' : '') + '">' +
+      (isError ? '' : '<div class="big-spinner"></div>') +
+      '<div>' + text + '</div>' +
+    '</div>';
+}
+
+async function destroyBrickIfAny() {
+  try {
+    if (window.checkoutBrickController && typeof window.checkoutBrickController.unmount === 'function') {
+      await window.checkoutBrickController.unmount();
+    }
+  } catch (e) {}
+  window.checkoutBrickController = null;
+}
+
 async function abrirModalPago() {
   modal.classList.add('show');
-  
-  if (window.checkoutBrickController) {
-    window.checkoutBrickController.unmount();
-    window.checkoutBrickController = null;
+  showWalletLoader('Preparando tu pago seguro...');
+
+  if (!MP_PUBLIC_KEY || MP_PUBLIC_KEY.indexOf('TU_PUBLIC_KEY') === 0) {
+    showWalletLoader('Falta configurar la Public Key', true);
+    return;
   }
 
-  walletContainer.innerHTML = '<div class="wallet-loader"><div class="big-spinner"></div><div>Preparando tu pago seguro...</div></div>';
-
-  if (!mpInstance) mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
+  await destroyBrickIfAny();
 
   setTimeout(async () => {
-    walletContainer.innerHTML = '';
     try {
+      if (!mpInstance) {
+        mpInstance = new MercadoPago(MP_PUBLIC_KEY, { locale: 'es-CL' });
+      }
+
+      walletContainer.innerHTML = '';
+      const loaderDiv = document.createElement('div');
+      loaderDiv.className = 'wallet-loader';
+      loaderDiv.id = 'wallet-loader-active';
+      loaderDiv.innerHTML = '<div class="big-spinner"></div><div>Preparando tu pago seguro...</div>';
+      walletContainer.appendChild(loaderDiv);
+
+      const target = document.createElement('div');
+      target.id = 'wallet_target';
+      walletContainer.appendChild(target);
+
       const bricksBuilder = mpInstance.bricks();
-      window.checkoutBrickController = await bricksBuilder.create('wallet', 'wallet_container', {
+      window.checkoutBrickController = await bricksBuilder.create('wallet', 'wallet_target', {
         initialization: { preferenceId: preferenceId },
         customization: { texts: { valueProp: 'smart_option' } },
         callbacks: {
-          onReady: () => { iniciarPolling(); },
-          onError: (err) => {
-            console.error(err);
-            walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>No se pudo cargar el pago. Cierra y reintenta.</div></div>';
+          onReady: () => {
+            const ld = document.getElementById('wallet-loader-active');
+            if (ld) ld.remove();
+            iniciarPolling();
+          },
+          onError: () => {
+            showWalletLoader('No se pudo cargar el pago. Cierra y reintenta.', true);
           },
           onSubmit: () => {}
         }
       });
     } catch (e) {
-      walletContainer.innerHTML = '<div class="wallet-loader" style="color:#a02020"><div>Error al inicializar: ' + e.message + '</div></div>';
+      showWalletLoader('Error: ' + e.message, true);
     }
-  }, 500); 
+  }, 300);
 }
 
 function iniciarPolling() {
@@ -845,16 +878,16 @@ async function consultarStatus() {
   } catch (e) {}
 }
 
-modalClose.addEventListener('click', () => {
+modalClose.addEventListener('click', async () => {
   modal.classList.remove('show');
   if (pollIntervalId) {
     clearInterval(pollIntervalId);
     pollIntervalId = null;
   }
-  if (window.checkoutBrickController) {
-    window.checkoutBrickController.unmount();
-    window.checkoutBrickController = null;
-  }
+  await destroyBrickIfAny();
+  setTimeout(() => {
+    showWalletLoader('Preparando tu pago seguro...');
+  }, 300);
   buyBtn.disabled = false;
   refreshButton();
   hideStatus();
