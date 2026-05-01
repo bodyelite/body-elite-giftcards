@@ -162,8 +162,11 @@
 <script>
 const API_BASE = 'https://body-elite-giftcards.onrender.com';
 const params = new URLSearchParams(window.location.search);
-const paymentId = params.get('payment_id');
-const servicio = params.get('servicio') || 'Tratamiento Body Elite';
+
+// Usamos preference_id que es la llave correcta que Render guardó
+const preferenceId = params.get('preference_id');
+const paymentId = params.get('payment_id') || params.get('collection_id');
+let servicio = params.get('servicio') || 'Tratamiento Body Elite';
 
 const statusEl = document.getElementById('status');
 const formSection = document.getElementById('form-section');
@@ -519,13 +522,13 @@ function downloadAsPDF(canvas, filename) {
 }
 
 async function init() {
-  if (!paymentId) {
-    showError('Falta el identificador de pago en la URL.');
+  if (!preferenceId || !paymentId) {
+    showError('Faltan identificadores de pago en la URL.');
     return;
   }
 
   try {
-    const res = await fetch(API_BASE + '/api/giftcard-data?payment_id=' + encodeURIComponent(paymentId));
+    const res = await fetch(API_BASE + '/api/giftcard-data?preference_id=' + encodeURIComponent(preferenceId));
     const data = await res.json();
 
     if (!res.ok || !data.success) {
@@ -539,14 +542,16 @@ async function init() {
     const rolInput = document.querySelector('input[name="rol"][value="' + data.rol + '"]');
     if (rolInput) rolInput.checked = true;
 
-    if (data.label) servicioTag.textContent = data.label;
-    else servicioTag.textContent = data.servicio;
+    // Usar el nombre bonito del tratamiento enviado por el backend
+    servicio = data.label || data.servicio || servicio;
+    servicioTag.textContent = servicio;
+    
     formSection.style.display = 'block';
 
     await document.fonts.ready;
 
     statusEl.className = 'status success';
-    statusEl.textContent = '¡Pago aprobado! Generando tu Pack de Regalo automáticamente...';
+    statusEl.textContent = '¡Pago validado! Generando tu Pack de Regalo...';
 
     setTimeout(async () => {
       try {
